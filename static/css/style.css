@@ -1,0 +1,126 @@
+body{
+margin-left: auto;
+margin-right: auto;
+display: block;
+width: 1024px;
+font-size: large;
+}
+
+#head{
+margin-top: 30px;
+height: 100px;
+}
+
+#mainTitle{
+font-size: xx-large;
+font-weight: bolder;
+padding-top: 25px;
+}
+
+#logo{
+float: right;
+}
+
+form{
+border: solid black 1px;
+border-radius: 10px;
+-moz-border-radius: 10px;
+width: 250px;
+padding: 10px;
+margin-top: 15px;
+margin-bottom: 15px;
+}
+
+#termStatisticForm{
+width: 400px;
+}
+
+.title, #csv{
+font-size: large;
+font-weight: bold;
+}
+
+ul{
+list-style-type: square;
+}
+
+li{
+margin-top: 5px;
+}
+
+#content{
+padding-left: 15px;
+}
+
+#logsButton{
+padding: 10px;
+}
+
+#export_button{
+padding: 5px;
+margin-top: 10px;
+}
+
+.deleteArchive{
+color: red;
+font-weight: bold;
+}
+
+input:hover, .deleteArchive:hover{
+cursor: pointer;
+}
+
+
+#data_view{
+margin-top: 20px;
+margin-bottom: 20px;
+font-size: smaller;
+}
+
+#data_view td{
+border: solid gray 1px;
+padding-left: 10px;
+padding-right: 10px;
+}
+
+tr:nth-child(odd){
+background-color: #EDE4E6;
+}
+
+#export_data_button{
+border: solid gray 1px;
+background-color: #EDE4E6;
+width: 100px;
+padding: 8px;
+margin-top: 20px;
+border-radius: 5px;
+-moz-border-radius: 5px;
+text-align: center;
+font-size: smaller;
+}
+
+a{
+/* text-decoration: none; */
+color: black;
+}
+
+.floated{
+float: left;
+}
+
+.description{
+font-size: smaller;
+}
+
+#subrange_left_input, #subrange_right_input, #regexp_input{
+border-radius: 5px;
+-moz-border-radius: 5px;
+padding: 5px;
+}
+
+/*input{
+border-radius: 5px;
+-moz-border-radius: 5px;
+border: solid gray 1px;
+padding: 10px;
+}*/

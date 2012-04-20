@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h3>Vložte Google Analytics CSV export ('.csv')</h3>
+<form enctype="multipart/form-data" action="/log_analysis/storeGAExport" method="post">
+{{ form.file }}
+<hr/>
+<div id="uploadButton"><input type="submit" value="Nahrát soubor"/></div>
+</form>
+<div class="description">
+<ul>
+<li>Zde se nahrávají nové soubory s exporty uživatelských dotazů ze služby Google Analytics. Termíny jsou ze souboru vyextrahovány a porovnávány s PSH a již zpracovanými hesly. V případě, že je termín nový, je uložen spolu se svým počtem mezi aktuální data.</li>
+</ul>
+</div>
+<hr />
+
+<h3>Vložte CSV soubor se zpracovanými hesly ('.csv')</h3>
+<form enctype="multipart/form-data" action="/log_analysis/storeCSV" method="post">
+{{ form.file }}
+<hr/>
+<div id="uploadButton"><input type="submit" value="Nahrát soubor"/></div>
+</form>
+<div class="description">
+<ul>
+<li>Po zpracování souboru s výsledky analýzy - exportu dat (viz. výše) - ze služby Google Docs opět termíny vyexportujte do formátu CSV a zde vložte. Po nahrání souboru jsou z aktuálních dat odstraněny termíny, které již byly posuzovány a jsou nahrány do pomocné databáze pro porovnávání s novými výsledky analýzy uživatelských dotazů.</li>
+</ul>
+</div>
+<hr />
+
+<h3>Aktuální stav</h3>
+<div class="title"><a href="/log_analysis/data_view">Náhled na aktuální data</a></div>
+<div id="export_data_button"><a href="/log_analysis/export_data">Export dat</a></div>
+<div class="description">
+<ul>
+<li>Náhled na aktuální data ukazuje všechny termíny, které se ve vyhledávání ukázaly více než šestkrát a ještě nebyly vyhodnocovány.</li>
+<li>Export dat je shodný s daty v náhledu. Data se uloží do CSV souboru, který svou strukturou odpovídá smluvenému formátu. Výsledný soubor stačí naimportovat do služby Google Docs, aby s ním bylo možné pohodlně pracovat.</li>
+</ul>
+</div>
+<hr />
+
+<!--<h3>Nezpracované logy</h3>
+<ul id="logy">
+{% if logy %}
+ {% for log in logy %}
+	<li><b>{{ log.0 }}</b>&nbsp;&nbsp;&nbsp;({{ log.1 }})</li>
+ {% endfor %}
+{% else %}
+<li><b>Ve složce se nenachází žádné nezpracované logy</b></li>
+{% endif %}
+</ul>
+
+{% if logy %}
+<div><input type="button" value="Zpracuj logy" id="logsButton"/></div>
+{% endif %}-->
+<!--<h3>Archiv výsledků</h3>
+<ul id="archiv">
+{% if archiv %}
+ {% for csv in archiv %}
+	<li><b><a href="static/logy_csv/{{ csv }}">{{ csv }}</a></b>    <span class="deleteArchive">×</span></li>
+ {% endfor %}
+{% else %}
+<li><b>Ve složce se nenachází žádné archivní výsledky analýz</b></li>
+{% endif %}
+</ul>
+<hr />-->
+<div>
+<h3>Analýza četnosti termínů (jeden termín na řádku)</h3>
+<form enctype="multipart/form-data" action="/log_analysis/termStatistic" method="post" id="termStatisticForm">
+{{ form.file }}
+<hr/>
+<div id="subrange_left"><label>Počet znaků zleva: </label><input id="subrange_left_input" type="text" value="" name="subrange_left"/></div>
+<div id="subrange_right"><label>Počet znaků zprava: </label><input id="subrange_right_input" type="text" value="" name="subrange_right"/></div>
+<div id="regexp"><label>Regulární výraz: </label><input id="regexp_input" type="text" value="" name="regexp"/></div>
+<hr />
+<div id="uploadButton"><input type="submit" value="Analyzovat soubor"/></div>
+</form>
+<div class="description">
+<ul>
+<li>Tento formulář slouží pro jednoduchou analýzu textových souborů - s analýzou logů nemá nic společného. Nemusíte se bát o data z analýzy logů, nic se s nimi nestane.... snad.</li>
+<li>Výsledkem je opět CSV soubor s dvojicemi "termín", "počet výskytů termínu". Všechny termíny jsou převedeny na malá písmena.</li>
+<li>Pole formuláře slouží k jednoduchému nastavení podmínek extrakce termínů.</li>
+<li>Pole "Počet znaků zleva/zprava" slouží k nastavení počtu znaků, které mají být odstraněny ze strany každé řádky.</li>
+<ul><li><b>Příklad použití:</b> <i>000006658 63004 L $$aLINUX</i> (z analýzy pole Produkt) - nastavíme Počet znaků zleva na 21.</li></ul>
+<li>Pole "Regulární výraz" slouží k nastavení <a href="http://cs.wikipedia.org/wiki/Regul%C3%A1rn%C3%AD_v%C3%BDraz" target=blank>regulárního výrazu</a>, který určuje podobu (polohu) termínů k extrakci. <b>V tomto případě není nutné mít soubor s jedním termínem na řádku, ale může se jednat o jakýkoliv textový soubor.</b></li>
+<ul><li><b>Příklad použití:</b> <i>?func=find-b&request=<b>opera%C4%8Dn%C3%AD+v%C3%BDzkum</b>&find_code=WRD&adjacent=N&...</i> (z analýzy logů) - odpovídající regulární výraz: <b>&request=([^&].*?)&find_code=(WRD|PSH|WKW)</b> - nachází zvýrazněnou část textu.</li></ul>
+<li>Před používáním regulárních výrazů doporučuji nastudovat alespoň základní pravidla, např. <b><a href="http://www.vscht.cz/obsah/fakulty/fcht/studium/infch/zvon/other/PerlTutorial/Output/example1.html" target=blank>zde</a></b>. Po pochopení výrazu z příkladu můžete, myslím, bez problémů používat. ;-)</li>
+<li><b>"Počet znaků zleva/zprava" a "Regulární výraz" není možné kombinovat</b> (program vám to ani nepovolí).</li>
+</ul>
+</div>
+
+{% endblock %}
