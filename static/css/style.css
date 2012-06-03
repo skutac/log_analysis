@@ -2,8 +2,11 @@ body{
 margin-left: auto;
 margin-right: auto;
 display: block;
-width: 1024px;
+width: 90%;
 font-size: large;
+font-family:"Lucida Grande", Tahoma, Arial, Verdana, sans-serif;
+font-size:14px;
+color:#565656;
 }
 
 #head{
@@ -83,9 +86,9 @@ padding-left: 10px;
 padding-right: 10px;
 }
 
-tr:nth-child(odd){
-background-color: #EDE4E6;
-}
+/*tr:nth-child(odd){*/
+/*background-color: #EDE4E6;*/
+/*}*/
 
 #export_data_button{
 border: solid gray 1px;
@@ -116,6 +119,80 @@ font-size: smaller;
 border-radius: 5px;
 -moz-border-radius: 5px;
 padding: 5px;
+}
+
+#data_edit{
+margin-top: 20px;
+vertical-align: middle;
+width: 95%;
+margin-left: auto;
+margin-right: auto;
+display: block;
+border-collapse: collapse;
+}
+
+#data_edit td{
+padding-top: 3px;
+padding-right: 3px;
+padding-left: 10px;
+}
+
+#data_edit tr{
+border: solid grey 1px;
+}
+
+#data_edit_header td{
+font-size: 14px;
+padding: 5px;
+background-color: #dedede;
+text-align: center;
+}
+
+#id_note{
+height: 20px;
+border: solid #dedede 1px;
+border-radius: 10px;
+-moz-border-radius: 10px;
+}
+
+#data_edit select{
+background-color:#f5f5f5;
+border:1px solid #dedede;
+border-top:1px solid #eee;
+border-left:1px solid #eee;
+font-family:"Lucida Grande", Tahoma, Arial, Verdana, sans-serif;
+font-size:12px;
+font-weight:bold;
+color:#565656;
+}
+
+#data_edit .count{
+font-weight: bolder;
+text-align: center;
+}
+
+#data_edit .acquisition{
+text-align: center;
+}
+
+.button{
+border-radius: 5px;
+-moz-border-radius: 5px;
+text-align: center;
+background-color:#f5f5f5;
+border:1px solid #dedede;
+border-top:1px solid #eee;
+border-left:1px solid #eee;
+line-height:130%;
+text-decoration:none;
+font-weight:bold;
+color:#565656;
+cursor:pointer;
+padding:5px 10px 6px 7px;
+}
+
+.processed{
+background-color: #91EB78;
 }
 
 /*input{

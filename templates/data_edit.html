@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div><a href='index'>Zpět na hlavní stránku</a></div>
+<table id="data_edit">
+<tr id="data_edit_header">
+<td><b>Termín</b></td>
+<td><b>Počet</b></td>
+<td><b>Kategorie</b></td>
+<td><b>Stav</b></td>
+<td><b>Upřesnění</b></td>
+<td><b>Akvizice</b></td>
+<td><b>Poznámka</b></td>
+<td>-</td>
+</tr>
+
+{% for term in terms %}
+
+{% if term.processed %}
+<tr class="processed">
+{% else %}
+<tr class="notprocessed">
+{% endif %}
+<form>
+<td class="subject">{{ term.subject }}</td>
+<td class="count">{{ term.count }}</td>
+<td>{{ edit_form.category }}</td>
+<td>{{ edit_form.state }}</td>
+<td>{{ edit_form.statecategory }}</td>
+<td class="acquisition">{{ edit_form.acquisition }}</td>
+<td>{{ edit_form.note }}</td>
+<td><input type="submit" value="Uložit" class="button"/></td>
+</form>
+</tr>
+{% endfor %}
+</table>
+<div><a href='index'>Zpět na hlavní stránku</a></div>
+{% endblock %}

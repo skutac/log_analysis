@@ -25,5 +25,6 @@ urlpatterns = patterns('',
     (r'^termStatistic$', 'handler.termStatistic'),
     (r'^export_data$', 'handler.export_data'),
     (r'^data_view$', 'views.data_view'),
+    (r'^data_edit$', 'views.data_edit'),
     (r'^.*$', 'views.index'),
 )

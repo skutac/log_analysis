@@ -2,7 +2,7 @@
 
 {% block content %}
 <h3>Vložte Google Analytics CSV export ('.csv')</h3>
-<form enctype="multipart/form-data" action="/log_analysis/storeGAExport" method="post">
+<form enctype="multipart/form-data" action="storeGAExport" method="post">
 {{ form.file }}
 <hr/>
 <div id="uploadButton"><input type="submit" value="Nahrát soubor"/></div>
@@ -15,7 +15,7 @@
 <hr />
 
 <h3>Vložte CSV soubor se zpracovanými hesly ('.csv')</h3>
-<form enctype="multipart/form-data" action="/log_analysis/storeCSV" method="post">
+<form enctype="multipart/form-data" action="storeCSV" method="post">
 {{ form.file }}
 <hr/>
 <div id="uploadButton"><input type="submit" value="Nahrát soubor"/></div>
@@ -28,8 +28,8 @@
 <hr />
 
 <h3>Aktuální stav</h3>
-<div class="title"><a href="/log_analysis/data_view">Náhled na aktuální data</a></div>
-<div id="export_data_button"><a href="/log_analysis/export_data">Export dat</a></div>
+<div class="title"><a href="data_view">Náhled na aktuální data</a></div>
+<div id="export_data_button"><a href="export_data">Export dat</a></div>
 <div class="description">
 <ul>
 <li>Náhled na aktuální data ukazuje všechny termíny, které se ve vyhledávání ukázaly více než šestkrát a ještě nebyly vyhodnocovány.</li>
@@ -65,7 +65,7 @@
 <hr />-->
 <div>
 <h3>Analýza četnosti termínů (jeden termín na řádku)</h3>
-<form enctype="multipart/form-data" action="/log_analysis/termStatistic" method="post" id="termStatisticForm">
+<form enctype="multipart/form-data" action="termStatistic" method="post" id="termStatisticForm">
 {{ form.file }}
 <hr/>
 <div id="subrange_left"><label>Počet znaků zleva: </label><input id="subrange_left_input" type="text" value="" name="subrange_left"/></div>
