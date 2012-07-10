@@ -3,8 +3,36 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from upload_data import upload
 from django.conf import settings
-from log_analysis.log.models import Current
+from log_analysis.log.models import Current, Category, SubjectCategory
 import os, datetime, csv
+
+def store_updated_row(request):
+    subject = request.POST["subject"]
+    category = request.POST["category"]
+    subject_category = request.POST["subject_category"]
+    note = request.POST["note"]
+
+    if "acquisition" in request.POST.keys():
+        acquisition = 1
+    else:
+        acquisition = 0
+
+    if not int(subject_category):
+        subject_category = None
+    else:
+        subject_category = SubjectCategory.objects.get(subjectcategoryid = subject_category)
+
+    if not int(category):
+        category = None
+
+    current = Current.objects.get(subject=subject)
+    current.category = Category.objects.get(categoryid = category)
+    current.subjectcategory = subject_category
+    current.processed = 1
+    current.acquisition = acquisition
+    current.note = note
+    current.save()
+    return HttpResponse(True)
 
 def storeCSV(request):
     """Accepts CSV file with proccessed subjects""" 

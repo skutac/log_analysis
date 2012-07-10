@@ -4,14 +4,15 @@
 <div><a href='index'>Zpět na hlavní stránku</a></div>
 <table id="data_edit">
 <tr id="data_edit_header">
-<td><b>Termín</b></td>
-<td><b>Počet</b></td>
-<td><b>Kategorie</b></td>
-<td><b>Stav</b></td>
-<td><b>Upřesnění</b></td>
-<td><b>Akvizice</b></td>
-<td><b>Poznámka</b></td>
-<td>-</td>
+<td>Datum</td>
+<td>Termín</td>
+<td>Počet</td>
+<td>Kategorie</td>
+<!-- <td><b>Stav</b></td> -->
+<td>Upřesnění</td>
+<td>Akvizice</td>
+<td>Poznámka</td>
+<!-- <td>-</td> -->
 </tr>
 
 {% for term in terms %}
@@ -22,14 +23,15 @@
 <tr class="notprocessed">
 {% endif %}
 <form>
+<td class="date">{{ term.date|date:"m/Y" }}</td>
 <td class="subject">{{ term.subject }}</td>
 <td class="count">{{ term.count }}</td>
-<td>{{ edit_form.category }}</td>
-<td>{{ edit_form.state }}</td>
-<td>{{ edit_form.statecategory }}</td>
-<td class="acquisition">{{ edit_form.acquisition }}</td>
-<td>{{ edit_form.note }}</td>
-<td><input type="submit" value="Uložit" class="button"/></td>
+<td class="category" data-original="{{term.category_id}}">{{ edit_form.category }}</td>
+<!-- <td>{{ edit_form.state }}</td> -->
+<td class="disabled subject_category" data-original="{{term.subjectcategory_id}}">{{ edit_form.subject_category }}</td>
+<td class="acquisition" data-original="{{term.acquisition}}">{{ edit_form.acquisition }}</td>
+<td class="note" data-original="{{term.note}}">{{ edit_form.note }}</td>
+<!-- <td><input type="submit" value="Uložit" class="button"/></td> -->
 </form>
 </tr>
 {% endfor %}

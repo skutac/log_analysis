@@ -79,7 +79,7 @@ def makeCSV():
     csv.close()	
     return filename
 
-def saveToCurrent(term, count, month):
+def saveToCurrent(term, count):
     """Updates database with current subject:count pair. Creates it if not already there."""
     old = Old.objects.filter(subject=term)
     hesla = Hesla.objects.using('psh_db').filter(heslo=term)
@@ -92,14 +92,13 @@ def saveToCurrent(term, count, month):
             obj.count = obj.count + int(count)
             obj.save()
         except:
-            obj = Current(subject=term, count=int(count), month=month)
+            obj = Current(subject=term, count=int(count))
             obj.save()
 
 
 
 def storeSubjectsFromGAExport(export):
     """Stores subjects from GA CSV export."""
-    month = datetime.date.today().month
     old_count = Current.objects.count()
     #i = 0
     switch = False
@@ -118,7 +117,7 @@ def storeSubjectsFromGAExport(export):
 
             term = term.strip(" ")
             if term != "":
-                saveToCurrent(term, count, month)
+                saveToCurrent(term, count)
 
         elif "Vyhledávací dotaz" in line:
             switch = True

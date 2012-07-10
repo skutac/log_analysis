@@ -1,61 +1,101 @@
 $(document).ready(function() {
-//       $('#archiv').spinner({img: 'static/img/busy.gif'});
-// 	$("#logsButton").live('click', function(){
-// 		$.ajax({type:"GET", 
-// 				url: "/log_analysis/extractSubjects", 
-// 				success: function(data){
-//                                         $('#spinner').spinner('remove');
-// 					$('#content').html(data);
-// 		     		}, 
-// 				data: {},
-// 		});
-// 		$("#content").html('<h3 id="spinner">Právě probíhá analýza logů. Mějte strpení. Může to trvat pěkně dlouho...</h3>');
-//                 $('#spinner').spinner({img:'static/img/busy.gif', position: 'left',});
-// 	});
-         
-//         $("#export_button").live('click', function(){
-// 		$.ajax({type:"GET", 
-// 				url: "/log_analysis/export_data", 
-// 				success: function(data){
-// //                                         $('#spinner').spinner('remove');
-// // 					$('#content').html(data);
-// 		     		}, 
-// 				data: {},
-// 		});
-// 		$("#content").html('<h3 id="spinner">Právě probíhá analýza logů. Mějte strpení. Může to trvat pěkně dlouho...</h3>');
-//                 $('#spinner').spinner({img:'static/img/busy.gif', position: 'left',});
-    $("#subrange_left_input, #subrange_right_input").live("keyup", function(){
-        var left_count = $("#subrange_left_input").val().length
-        var right_count = $("#subrange_right_input").val().length
-        
-        if(left_count + right_count > 0){
-            $("#regexp_input").attr("disabled", true);
-        }
-        else{
-            $("#regexp_input").removeAttr("disabled");
-        }
+
+    set_original_values();
+    store_updated_rows();
+
+    $("td").on("click", "#id_category", function(){
+        var option = $(this).val();
+        update_category($(this), option);
+    });
+
+    $("td").on("click", "#id_subject_category", function(){
+        var option = $(this).val();
+        update_subject_category($(this), option);
+    });
+
+    $("#data_edit").on("click", "tr", function(){
+        $(this).addClass("updated");
+    });
+
+
+
+});
+
+function store_updated_rows(){
+    $(".updated").each(function(index, tr){
+        var subject = $(tr).find(".subject").text();
+        var category = $(tr).find("#id_category").val();
+        var subject_category = $(tr).find("#id_subject_category").val();
+        var acquisition = $(tr).find("#id_acquisition").attr("checked");
+        var note = $(tr).find("#id_note").val();
+
+        $.ajax({
+            type: 'POST',
+            url: "store_updated_row",
+            data: {subject: subject, subject_category: subject_category, category: category, acquisition:acquisition, note:note},
+            success: function(msg){
+                $(tr).removeClass("updated");
+            }
+        });
     });
     
-    $("#regexp_input").live("keyup", function(){
-        var regexp_count = $(this).val().length
+    setTimeout(store_updated_rows, 60000);
+}
+
+    function set_original_values(){
+        $(".processed").each(function(index, tr){
+            var category = $(tr).find(".category").attr("data-original");
+            var current_select = $(tr).find("#id_category");
+            update_category(current_select, category);
+
+            if(category == 4){
+                 var subject_category = $(tr).find(".subject_category").attr("data-original");
+                 var current_select = $(tr).find("#id_subject_category");
+                 update_subject_category(current_select, subject_category);
+            }
+
+            var note = $(tr).find(".note").attr("data-original");
+            $(tr).find("#id_note").val(note);
+
+            var acquisition = $(tr).find(".acquisition").attr("data-original");
+            if(acquisition == "True"){
+                $(tr).find("#id_acquisition").attr("checked", "true");
+            }
+
+        });
+    }
+
+    function update_category(current_select, option){
+        current_select.val(option);
+        var td = current_select.parent("td").next();
+        var tr = td.parent("tr");
+        var subject_category = td.find("#id_subject_category");
         
-        if(regexp_count > 0){
-            $("#subrange_left_input, #subrange_right_input").attr("disabled", true);
+        if(option == 4){ 
+            subject_category.removeAttr("disabled");
+            td.attr("class", "active subject_category");
+            tr.attr("class", "neutral");
         }
         else{
-            $("#subrange_left_input, #subrange_right_input").removeAttr("disabled");
+            subject_category.attr("disabled", "disabled");
+            subject_category.val(0);
+            td.attr("class", "disabled subject_category");
+            tr.attr("class", "denied");
         }
-    });
-});
+    }
+
+    function update_subject_category(current_select, option){
+        current_select.val(option);
+        var tr = current_select.parent("td").parent("tr");
+        // var subject_category = td.find("#id_subject_category");
         
-        $(".deleteArchive").live('click', function(){
-                var parent = $(this).parent('li');
-                var archive = $('a', parent).text();
-		$.ajax({type:"POST", 
-				url: "/log_analysis/deleteArchive", 
-				success: function(data){
-					parent.hide('slow');
-		     		}, 
-				data: {archive : archive},
-		});
-	});
+        if(option == 1|option == 2){
+            tr.attr("class", "accepted");
+        }
+        else if(option == 0){
+            tr.attr("class", "");
+        }
+        else{
+            tr.attr("class", "denied");
+        }
+    }

@@ -1,20 +1,17 @@
+#coding: utf-8
 from django import forms
 
-from log.models import Current, Category, State, StateCategory
+from log.models import Current, Category, SubjectCategory
+
+categories_list = ["-", "dílo", "osoba", "korporace", "předmět", "akce", "místo", "jiné"]
+subject_categories_list = ["-","deskriptor", "nedeskriptor", "podrobné", "obecné", "vícevýznamové", "produkt", "slang", "málo užívané", "profesní skupina", "obsaženo v PSH"]
 
 class EditForm(forms.Form):
     """Model of form for file upload"""
-    categories = Category.objects.all()
-    categories = tuple([(c.categoryid, c.category) for c in categories])
-    
-    states = State.objects.all()
-    states = tuple([(s.stateid, s.state) for s in states])
-    
-    statecategories = StateCategory.objects.all()
-    statecategories = tuple([(s.statecategoryid, s.statecategory) for s in statecategories])        
+    categories = tuple([(c, categories_list[c]) for c in range(len(categories_list))])
+    subject_categories = tuple([(s, subject_categories_list[s]) for s in range(len(subject_categories_list))])        
     
     category = forms.ChoiceField(categories)
-    state = forms.ChoiceField(states)
-    statecategory = forms.ChoiceField(statecategories)
+    subject_category = forms.ChoiceField(subject_categories, widget=forms.Select(attrs={'disabled':'disabled'}))
     acquisition = forms.BooleanField()
     note = forms.CharField(widget=forms.Textarea)
