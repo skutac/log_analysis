@@ -2,6 +2,7 @@
 import os
 
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django import forms
 from django.conf import settings
@@ -12,6 +13,10 @@ from log_analysis.forms import EditForm
 class UploadFileForm(forms.Form):
     """Model of form for file upload"""
     file = forms.FileField()
+
+def redirect(request):
+    """Redirects to index site"""
+    return HttpResponseRedirect("index")
 
 def index(request):
     """Returns main site for log and text file analysis"""

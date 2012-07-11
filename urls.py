@@ -16,7 +16,7 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     # (r'^admin/(.*)', admin.site.root),
     (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': os.path.join(settings.ROOT, 'static').replace('\\','/')}),
-    (r'^$', 'views.index'),
+    (r'^$', 'views.redirect'),
     (r'^index$', 'views.index'),
     (r'^storeCSV$', 'handler.storeCSV'),
     (r'^storeGAExport$', 'handler.storeGAExport'),
