@@ -224,6 +224,11 @@ padding:5px 10px 6px 7px;
 	background-color: #FFFFFF;
 }
 
+.home_link{
+	margin-top: 15px;
+	font-weight: bold;
+}
+
 /*input{
 border-radius: 5px;
 -moz-border-radius: 5px;

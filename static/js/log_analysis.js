@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
     set_original_values();
-    store_updated_rows();
+    store_updated_rows(true);
 
     $("td").on("click", "#id_category", function(){
         var option = $(this).val();
@@ -15,14 +15,26 @@ $(document).ready(function() {
 
     $("#data_edit").on("click", "tr", function(){
         $(this).addClass("updated");
+        $(this).addClass("changed");
     });
 
-
+    $(window).unload( function () {
+        console.log("ok");
+        store_updated_rows("changed", false);  
+    });
 
 });
 
-function store_updated_rows(){
-    $(".updated").each(function(index, tr){
+function store_updated_rows(select_class, async){
+    if(async == null){
+        async = true
+    }
+
+    if(select_class == null){
+        select_class = "updated"
+    }
+
+    $("." + select_class).each(function(index, tr){
         var subject = $(tr).find(".subject").text();
         var category = $(tr).find("#id_category").val();
         var subject_category = $(tr).find("#id_subject_category").val();
@@ -32,6 +44,7 @@ function store_updated_rows(){
         $.ajax({
             type: 'POST',
             url: "store_updated_row",
+            async: async,
             data: {subject: subject, subject_category: subject_category, category: category, acquisition:acquisition, note:note},
             success: function(msg){
                 $(tr).removeClass("updated");

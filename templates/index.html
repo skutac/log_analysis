@@ -1,6 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+<h3>Aktuální stav</h3>
+<div class="title"><a href="data_edit">Editace aktuálních dat</a></div>
+<!-- <div id="export_data_button"><a href="export_data">Export dat</a></div> -->
+<div class="description">
+<ul>
+<li>Editor aktuálních dat obsahuje všechny termíny - zpracované/nezpracované.</li>
+<li>Zpracované termíny se automaticky každých 60 sekund ukládají do databáze.</li>
+</ul>
+</div>
+
+<hr />
+
 <h3>Vložte Google Analytics CSV export ('.csv')</h3>
 <form enctype="multipart/form-data" action="storeGAExport" method="post">
 {{ form.file }}
@@ -9,12 +22,11 @@
 </form>
 <div class="description">
 <ul>
-<li>Zde se nahrávají nové soubory s exporty uživatelských dotazů ze služby Google Analytics. Termíny jsou ze souboru vyextrahovány a porovnávány s PSH a již zpracovanými hesly. V případě, že je termín nový, je uložen spolu se svým počtem mezi aktuální data.</li>
+<li>Zde se nahrávají nové soubory s exporty uživatelských dotazů ze služby Google Analytics. Termíny již nejsou vyřazovány na základě jejich předchozího zpracování, ale dochází k aktualizaci vyhledávaného termínu.</li>
 </ul>
 </div>
-<hr />
 
-<h3>Vložte CSV soubor se zpracovanými hesly ('.csv')</h3>
+<!-- <h3>Vložte CSV soubor se zpracovanými hesly ('.csv')</h3>
 <form enctype="multipart/form-data" action="storeCSV" method="post">
 {{ form.file }}
 <hr/>
@@ -25,9 +37,9 @@
 <li>Po zpracování souboru s výsledky analýzy - exportu dat (viz. výše) - ze služby Google Docs opět termíny vyexportujte do formátu CSV a zde vložte. Po nahrání souboru jsou z aktuálních dat odstraněny termíny, které již byly posuzovány a jsou nahrány do pomocné databáze pro porovnávání s novými výsledky analýzy uživatelských dotazů.</li>
 </ul>
 </div>
-<hr />
+<hr /> -->
 
-<h3>Aktuální stav</h3>
+<!-- <h3>Aktuální stav</h3>
 <div class="title"><a href="data_view">Náhled na aktuální data</a></div>
 <div id="export_data_button"><a href="export_data">Export dat</a></div>
 <div class="description">
@@ -35,8 +47,7 @@
 <li>Náhled na aktuální data ukazuje všechny termíny, které se ve vyhledávání ukázaly více než šestkrát a ještě nebyly vyhodnocovány.</li>
 <li>Export dat je shodný s daty v náhledu. Data se uloží do CSV souboru, který svou strukturou odpovídá smluvenému formátu. Výsledný soubor stačí naimportovat do služby Google Docs, aby s ním bylo možné pohodlně pracovat.</li>
 </ul>
-</div>
-<hr />
+</div> -->
 
 <!--<h3>Nezpracované logy</h3>
 <ul id="logy">
@@ -63,7 +74,7 @@
 {% endif %}
 </ul>
 <hr />-->
-<div>
+<!-- <div>
 <h3>Analýza četnosti termínů (jeden termín na řádku)</h3>
 <form enctype="multipart/form-data" action="termStatistic" method="post" id="termStatisticForm">
 {{ form.file }}
@@ -86,6 +97,6 @@
 <li>Před používáním regulárních výrazů doporučuji nastudovat alespoň základní pravidla, např. <b><a href="http://www.vscht.cz/obsah/fakulty/fcht/studium/infch/zvon/other/PerlTutorial/Output/example1.html" target=blank>zde</a></b>. Po pochopení výrazu z příkladu můžete, myslím, bez problémů používat. ;-)</li>
 <li><b>"Počet znaků zleva/zprava" a "Regulární výraz" není možné kombinovat</b> (program vám to ani nepovolí).</li>
 </ul>
-</div>
+</div> -->
 
 {% endblock %}

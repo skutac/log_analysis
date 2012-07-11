@@ -17,7 +17,7 @@ class SubjectCategory(models.Model):
     
 class Current(models.Model):
     subject = models.CharField(max_length=255, primary_key=True)
-    count = models.IntegerField()
+    count = models.IntegerField(null=True)
     date = models.DateField(auto_now=True)
     category = models.ForeignKey("Category", null=True, blank=True)
     subjectcategory = models.ForeignKey("SubjectCategory", null=True, blank=True)
