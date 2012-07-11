@@ -34,12 +34,12 @@ def store_updated_row(request):
     current.save()
     return HttpResponse(True)
 
-def storeCSV(request):
-    """Accepts CSV file with proccessed subjects""" 
-    if request.FILES:
-        return render_to_response("result.html", {"msg": upload.storeSubjectsFromCSV(request.FILES["file"]), })
-    else:
-        return render_to_response("error.html", {'error': 'Nebyl vybrán žádný soubor.'})
+# def storeCSV(request):
+#     """Accepts CSV file with proccessed subjects""" 
+#     if request.FILES:
+#         return render_to_response("result.html", {"msg": upload.storeSubjectsFromCSV(request.FILES["file"]), })
+#     else:
+#         return render_to_response("error.html", {'error': 'Nebyl vybrán žádný soubor.'})
 
 def storeGAExport(request):
     """Accepts GA CSV export with unproccessed subjects""" 
@@ -48,48 +48,48 @@ def storeGAExport(request):
     else:
         return render_to_response("error.html", {'error': 'Nebyl vybrán žádný soubor.'})
 
-def termStatistic(request):
-    """Initiates proccess of analyzing text file according to set parameters"""
-    if request.FILES:
-        #if request.POST["subrange_left"]:
-        try:
-            subrange_left = int(request.POST["subrange_left"])
-        except Exception, e:
-            subrange_left = 0
+# def termStatistic(request):
+#     """Initiates proccess of analyzing text file according to set parameters"""
+#     if request.FILES:
+#         #if request.POST["subrange_left"]:
+#         try:
+#             subrange_left = int(request.POST["subrange_left"])
+#         except Exception, e:
+#             subrange_left = 0
 
-        #if request.POST["subrange_right"]:
-        try:
-            subrange_right = (int(request.POST["subrange_right"])+1)*(-1)
-        except Exception, e:
-            subrange_right = None
+#         #if request.POST["subrange_right"]:
+#         try:
+#             subrange_right = (int(request.POST["subrange_right"])+1)*(-1)
+#         except Exception, e:
+#             subrange_right = None
 
-        return render_to_response("result.html", {"msg": upload.makeTermStatistic(request.FILES["file"], subrange_left, subrange_right, request.POST["regexp"])})
-    else:
-        return render_to_response("error.html", {'error': 'Nebyl vybrán žádný soubor.'})
+#         return render_to_response("result.html", {"msg": upload.makeTermStatistic(request.FILES["file"], subrange_left, subrange_right, request.POST["regexp"])})
+#     else:
+#         return render_to_response("error.html", {'error': 'Nebyl vybrán žádný soubor.'})
 
-def export_data(request):
-    """Creates the HttpResponse object with the appropriate CSV header."""
-    filename = "logy-export-%s.csv" %datetime.date.today()
-    response = HttpResponse(mimetype='text/csv')
-    response['Content-Disposition'] = "".join(['attachment; filename=', filename])
-    objects = Current.objects.filter(count__gt=3).order_by("-count")
-    objects_gt_2 = Current.objects.filter(count__gt=2).order_by("-count")
+# def export_data(request):
+#     """Creates the HttpResponse object with the appropriate CSV header."""
+#     filename = "logy-export-%s.csv" %datetime.date.today()
+#     response = HttpResponse(mimetype='text/csv')
+#     response['Content-Disposition'] = "".join(['attachment; filename=', filename])
+#     objects = Current.objects.filter(count__gt=3).order_by("-count")
+#     objects_gt_2 = Current.objects.filter(count__gt=2).order_by("-count")
 
-    if len(objects) < 200:
-        objects = objects_gt_2
+#     if len(objects) < 200:
+#         objects = objects_gt_2
 
-    writer = csv.writer(response)
-    writer.writerow(['datum vytvoření hesla', 
-                     'počet', 
-                     'zkratka', 
-                     'termín', 
-                     'N/D', 
-                     'kontrol. č.', 
-                     'pozn.'])
+#     writer = csv.writer(response)
+#     writer.writerow(['datum vytvoření hesla', 
+#                      'počet', 
+#                      'zkratka', 
+#                      'termín', 
+#                      'N/D', 
+#                      'kontrol. č.', 
+#                      'pozn.'])
 
-    for obj in objects:
-        writer.writerow(["", obj.count, "", obj.subject.encode("utf8"), "", "", ""])
-    return response
+#     for obj in objects:
+#         writer.writerow(["", obj.count, "", obj.subject.encode("utf8"), "", "", ""])
+#     return response
 
 #def deleteArchive(request):
     #try:

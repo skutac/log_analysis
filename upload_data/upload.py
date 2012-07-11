@@ -80,6 +80,7 @@ from django.utils.encoding import smart_str, smart_unicode
 #     return filename
 
 def saveToCurrent(term, count):
+    print term, count
     """Updates database with current subject:count pair. Creates it if not already there."""
     # old = Old.objects.filter(subject=term)
     # hesla = Hesla.objects.using('psh_db').filter(heslo=term)
@@ -105,24 +106,23 @@ def saveToCurrent(term, count):
 def storeSubjectsFromGAExport(export):
     """Stores subjects from GA CSV export."""
     old_count = Current.objects.count()
-    #i = 0
     switch = False
-
+    old = "**********"
     for line in export.readlines():
-        #if line.startswith("# -----"):
-                #switch = False
-
         if switch:
             try:
                 items = re.search("(.*?),(\d+),", line)
-                #items = re.search("(.*?),(\d+),\d+", line)
                 term, count = items.group(1).strip("\""), items.group(2)
             except Exception, e:
                 pass
 
             term = term.strip(" ")
             if term != "":
-                saveToCurrent(term, count)
+                if term == old:
+                    switch = False
+                else:
+                    saveToCurrent(term, count)
+                    old = term
 
         elif "Vyhledávací dotaz" in line:
             switch = True
