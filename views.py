@@ -16,7 +16,7 @@ class UploadFileForm(forms.Form):
 
 def redirect(request):
     """Redirects to index site"""
-    return HttpResponseRedirect("index")
+    return HttpResponseRedirect("log_analysis/index")
 
 def index(request):
     """Returns main site for log and text file analysis"""
