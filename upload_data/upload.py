@@ -83,18 +83,17 @@ def saveToCurrent(term, count):
     print term, count
     """Updates database with current subject:count pair. Creates it if not already there."""
     # old = Old.objects.filter(subject=term)
-    # hesla = Hesla.objects.using('psh_db').filter(heslo=term)
-    # ekvivalence = Ekvivalence.objects.using('psh_db').filter(ekvivalent=term)
-    # varianta = Varianta.objects.using('psh_db').filter(varianta=term)
-    # test = len(old) + len(hesla) + len(ekvivalence) + len(varianta)
-    # if test == 0:
-    
-    obj, created = Current.objects.get_or_create(subject=term)
-    if created:
-        obj.count = int(count)
-    else:
-        obj.count += int(count)
-    obj.save()
+    hesla = Hesla.objects.using('psh_db').filter(heslo=term)
+    ekvivalence = Ekvivalence.objects.using('psh_db').filter(ekvivalent=term)
+    varianta = Varianta.objects.using('psh_db').filter(varianta=term)
+    test = len(hesla) + len(ekvivalence) + len(varianta)
+    if test == 0:
+        obj, created = Current.objects.get_or_create(subject=term)
+        if created:
+            obj.count = int(count)
+        else:
+            obj.count += int(count)
+        obj.save()
     # obj.count = obj.count + int(count)
     #      obj.save()
     # except:

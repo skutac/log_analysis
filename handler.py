@@ -34,19 +34,19 @@ def store_updated_row(request):
     current.save()
     return HttpResponse(True)
 
-# def storeCSV(request):
-#     """Accepts CSV file with proccessed subjects""" 
-#     if request.FILES:
-#         return render_to_response("result.html", {"msg": upload.storeSubjectsFromCSV(request.FILES["file"]), })
-#     else:
-#         return render_to_response("error.html", {'error': 'Nebyl vybrán žádný soubor.'})
-
 def storeGAExport(request):
     """Accepts GA CSV export with unproccessed subjects""" 
     if request.FILES:
         return render_to_response("result.html", {"msg": upload.storeSubjectsFromGAExport(request.FILES["file"]), })
     else:
         return render_to_response("error.html", {'error': 'Nebyl vybrán žádný soubor.'})
+
+# def storeCSV(request):
+#     """Accepts CSV file with proccessed subjects""" 
+#     if request.FILES:
+#         return render_to_response("result.html", {"msg": upload.storeSubjectsFromCSV(request.FILES["file"]), })
+#     else:
+#         return render_to_response("error.html", {'error': 'Nebyl vybrán žádný soubor.'})
 
 # def termStatistic(request):
 #     """Initiates proccess of analyzing text file according to set parameters"""
