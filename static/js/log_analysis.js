@@ -18,10 +18,26 @@ $(document).ready(function() {
         $(this).addClass("changed");
     });
 
-    $(window).unload( function () {
-        console.log("ok");
+    $(window).unload(function(){
         store_updated_rows("changed", false);  
     });
+
+    $("#hide_processed").bind("click", function(){
+        var state = $(this).attr("data-state");
+        if(state == "on"){
+            $(".processed").hide("fast");
+            $(this).attr("data-state", "off");
+            $(this).text("Ukaž zpracované");
+        }
+        else{
+            $(".processed").show("fast");
+            $(this).attr("data-state", "on");
+            $(this).text("Schovej zpracované");
+        }
+    });
+
+
+    $('textarea').autosize();
 
 });
 
@@ -87,28 +103,38 @@ function store_updated_rows(select_class, async){
         if(option == 4){ 
             subject_category.removeAttr("disabled");
             td.attr("class", "active subject_category");
-            tr.attr("class", "neutral");
+            tr.addClass("neutral");
+        }
+        else if(option == "None"|option == 0){
+            tr.removeClass("neutral");
+            tr.removeClass("accepted");
+            tr.removeClass("denied");
+            subject_category.attr("disabled", "disabled");
+            // update_subject_category($("#id_subject_category"), 0)
         }
         else{
             subject_category.attr("disabled", "disabled");
             subject_category.val(0);
-            td.attr("class", "disabled subject_category");
-            tr.attr("class", "denied");
+            td.addClass("disabled");
+            tr.addClass("denied");
         }
     }
 
     function update_subject_category(current_select, option){
         current_select.val(option);
         var tr = current_select.parent("td").parent("tr");
-        // var subject_category = td.find("#id_subject_category");
-        console.log(option.length);
+        
         if(option == 1|option == 2){
-            tr.attr("class", "accepted");
+            tr.removeClass("neutral");
+            tr.removeClass("denied");
+            tr.addClass("accepted");
         }
-        else if(option == "None"){
-            return;
+        else if(option == "None"|option == 0){
+            tr.addClass("neutral");
         }
         else{
-            tr.attr("class", "denied");
+            tr.removeClass("neutral");
+            tr.removeClass("accepted");
+            tr.addClass("denied");
         }
     }

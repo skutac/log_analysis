@@ -7,32 +7,35 @@ from log_analysis.log.models import Current, Category, SubjectCategory
 import os, datetime, csv
 
 def store_updated_row(request):
-    subject = request.POST["subject"]
-    category = request.POST["category"]
-    subject_category = request.POST["subject_category"]
-    note = request.POST["note"]
+    try:
+        subject = request.POST["subject"]
+        category = request.POST["category"]
+        subject_category = request.POST["subject_category"]
+        note = request.POST["note"]
 
-    if "acquisition" in request.POST.keys():
-        acquisition = 1
-    else:
-        acquisition = 0
+        if "acquisition" in request.POST.keys():
+            acquisition = 1
+        else:
+            acquisition = 0
 
-    if not int(subject_category):
-        subject_category = None
-    else:
-        subject_category = SubjectCategory.objects.get(subjectcategoryid = subject_category)
+        if not int(subject_category):
+            subject_category = None
+        else:
+            subject_category = SubjectCategory.objects.get(subjectcategoryid = subject_category)
 
-    if not int(category):
-        category = None
+        if not int(category):
+            category = None
 
-    current = Current.objects.get(subject=subject)
-    current.category = Category.objects.get(categoryid = category)
-    current.subjectcategory = subject_category
-    current.processed = 1
-    current.acquisition = acquisition
-    current.note = note
-    current.save()
-    return HttpResponse(True)
+        current = Current.objects.get(subject=subject)
+        current.category = Category.objects.get(categoryid = category)
+        current.subjectcategory = subject_category
+        current.processed = 1
+        current.acquisition = acquisition
+        current.note = note
+        current.save()
+        return HttpResponse(True)
+    except Exception, e:
+        print str(e)
 
 def storeGAExport(request):
     """Accepts GA CSV export with unproccessed subjects""" 
