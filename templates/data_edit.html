@@ -28,7 +28,7 @@
 <td class="category" data-original="{{term.category_id}}">{{ edit_form.category }}</td>
 <td class="disabled subject_category" data-original="{{term.subjectcategory_id}}">{{ edit_form.subject_category }}</td>
 <td class="acquisition" data-original="{{term.acquisition}}">{{ edit_form.acquisition }}</td>
-{% if term.processed %}
+{% if term.note %}
 <td class="note resized" data-original="{{term.note}}">{{ edit_form.note }}</td>
 {% else %}
 <td class="note" data-original="">{{ edit_form.note }}</td>
