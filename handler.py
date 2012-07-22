@@ -18,16 +18,18 @@ def store_updated_row(request):
         else:
             acquisition = 0
 
-        if not int(subject_category):
-            subject_category = None
+        if int(category):
+            category = Category.objects.get(categoryid = category)
         else:
-            subject_category = SubjectCategory.objects.get(subjectcategoryid = subject_category)
-
-        if not int(category):
             category = None
 
+        if int(subject_category):
+            subject_category = SubjectCategory.objects.get(subjectcategoryid = subject_category)
+        else:
+            subject_category = None
+
         current = Current.objects.get(subject=subject)
-        current.category = Category.objects.get(categoryid = category)
+        current.category = category
         current.subjectcategory = subject_category
         current.processed = 1
         current.acquisition = acquisition

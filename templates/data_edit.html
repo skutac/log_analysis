@@ -9,11 +9,9 @@
 <td>Termín</td>
 <td>Počet</td>
 <td>Kategorie</td>
-<!-- <td><b>Stav</b></td> -->
 <td>Upřesnění</td>
 <td>Akvizice</td>
 <td>Poznámka</td>
-<!-- <td>-</td> -->
 </tr>
 
 {% for term in terms %}
@@ -28,15 +26,16 @@
 <td class="subject">{{ term.subject }}</td>
 <td class="count">{{ term.count }}</td>
 <td class="category" data-original="{{term.category_id}}">{{ edit_form.category }}</td>
-<!-- <td>{{ edit_form.state }}</td> -->
 <td class="disabled subject_category" data-original="{{term.subjectcategory_id}}">{{ edit_form.subject_category }}</td>
 <td class="acquisition" data-original="{{term.acquisition}}">{{ edit_form.acquisition }}</td>
-<td class="note" data-original="{{term.note}}">{{ edit_form.note }}</td>
-<!-- <td><input type="submit" value="Uložit" class="button"/></td> -->
+{% if term.processed %}
+<td class="note resized" data-original="{{term.note}}">{{ edit_form.note }}</td>
+{% else %}
+<td class="note" data-original="">{{ edit_form.note }}</td>
+{% endif %}
 </form>
 </tr>
 {% endfor %}
 </table>
 <div class="home_link"><a href='index'>Zpět na hlavní stránku</a></div>
-<!-- <div id="filter_bar"></div> -->
 {% endblock %}

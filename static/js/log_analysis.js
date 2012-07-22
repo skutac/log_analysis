@@ -18,6 +18,10 @@ $(document).ready(function() {
         $(this).addClass("changed");
     });
 
+    $("#data_edit").on("click", "textarea", function(){
+        $(this).autosize();
+    });
+
     $(window).unload(function(){
         store_updated_rows("changed", false);  
     });
@@ -37,7 +41,7 @@ $(document).ready(function() {
     });
 
 
-    $('textarea').autosize();
+    $('.resized textarea').autosize();
 
 });
 
