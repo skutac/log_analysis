@@ -7,6 +7,59 @@ from log_analysis.psh_db.models import Hesla, Ekvivalence, Varianta
 from django.conf import settings
 from django.utils.encoding import smart_str, smart_unicode
 
+def saveToCurrent(term, count):
+    print term, count
+    """Updates database with current subject:count pair. Creates it if not already there."""
+    # old = Old.objects.filter(subject=term)
+    hesla = Hesla.objects.using('psh_db').filter(heslo=term)
+    ekvivalence = Ekvivalence.objects.using('psh_db').filter(ekvivalent=term)
+    varianta = Varianta.objects.using('psh_db').filter(varianta=term)
+    test = len(hesla) + len(ekvivalence) + len(varianta)
+    if test == 0:
+        obj, created = Current.objects.get_or_create(subject=term)
+        if created:
+            obj.count = int(count)
+        else:
+            obj.count += int(count)
+        obj.save()
+    # obj.count = obj.count + int(count)
+    #      obj.save()
+    # except:
+    #         obj = Current(subject=term, count=int(count))
+    #         obj.save()
+
+
+
+def storeSubjectsFromGAExport(export):
+    """Stores subjects from GA CSV export."""
+    old_count = Current.objects.count()
+    switch = False
+    old = "**********"
+    for line in export.readlines():
+        if switch:
+            try:
+                items = re.search("(.*?),(\d+),", line)
+                term, count = items.group(1).strip("\""), items.group(2)
+            except Exception, e:
+                pass
+
+            term = term.strip(" ")
+            if term != "":
+                if term == old:
+                    switch = False
+                else:
+                    saveToCurrent(term, count)
+                    old = term
+
+        elif "Vyhledávací dotaz," in line or "Search Term," in line:
+            switch = True
+
+    export.close()
+
+    total_count = Current.objects.count()
+    new_count = total_count - old_count
+    return u"Nově nahráno: %s (%s celkem)" %(new_count, total_count)
+
 # def storeSubjectsFromCSV(csvfile):
 #     """Stores proccessed subjects from CSV file to database"""
 #     lines = csv.reader(csvfile, delimiter=",", quotechar='"')
@@ -76,58 +129,5 @@ from django.utils.encoding import smart_str, smart_unicode
 #     for obj in objects:
 #         csv.write(", %s, , %s, , , \n" %(obj.count, obj.subject.encode("utf8")))
 
-#     csv.close()	
+#     csv.close()   
 #     return filename
-
-def saveToCurrent(term, count):
-    print term, count
-    """Updates database with current subject:count pair. Creates it if not already there."""
-    # old = Old.objects.filter(subject=term)
-    hesla = Hesla.objects.using('psh_db').filter(heslo=term)
-    ekvivalence = Ekvivalence.objects.using('psh_db').filter(ekvivalent=term)
-    varianta = Varianta.objects.using('psh_db').filter(varianta=term)
-    test = len(hesla) + len(ekvivalence) + len(varianta)
-    if test == 0:
-        obj, created = Current.objects.get_or_create(subject=term)
-        if created:
-            obj.count = int(count)
-        else:
-            obj.count += int(count)
-        obj.save()
-    # obj.count = obj.count + int(count)
-    #      obj.save()
-    # except:
-    #         obj = Current(subject=term, count=int(count))
-    #         obj.save()
-
-
-
-def storeSubjectsFromGAExport(export):
-    """Stores subjects from GA CSV export."""
-    old_count = Current.objects.count()
-    switch = False
-    old = "**********"
-    for line in export.readlines():
-        if switch:
-            try:
-                items = re.search("(.*?),(\d+),", line)
-                term, count = items.group(1).strip("\""), items.group(2)
-            except Exception, e:
-                pass
-
-            term = term.strip(" ")
-            if term != "":
-                if term == old:
-                    switch = False
-                else:
-                    saveToCurrent(term, count)
-                    old = term
-
-        elif "Vyhledávací dotaz" in line:
-            switch = True
-
-    export.close()
-
-    total_count = Current.objects.count()
-    new_count = total_count - old_count
-    return u"Nově nahráno: %s (%s celkem)" %(new_count, total_count)

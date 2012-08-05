@@ -3,6 +3,8 @@ $(document).ready(function() {
     set_original_values();
     store_updated_rows(true);
 
+    // $('#data_edit').dataTable();
+
     $("td").on("click", "#id_category", function(){
         var option = $(this).val();
         update_category($(this), option);

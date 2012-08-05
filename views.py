@@ -23,12 +23,6 @@ def index(request):
     form = UploadFileForm()
     return render_to_response("index.html", {"form":form})
 
-def data_view(request):
-    """Returns view on current data ordered by count"""
-    #terms = Current.objects.filter(count__gt = 6).order_by("-count")
-    terms = Current.objects.all().order_by("-count")
-    return render_to_response("data_view.html", {'terms': terms})
-
 def data_edit(request):
     """Returns view on current data ordered by count"""
     #terms = Current.objects.filter(count__gt = 6).order_by("-count")
@@ -36,6 +30,11 @@ def data_edit(request):
     terms = Current.objects.all().order_by("-count")
     return render_to_response("data_edit.html", {'terms': terms, "edit_form": edit_form})
 
+# def data_view(request):
+#     """Returns view on current data ordered by count"""
+#     #terms = Current.objects.filter(count__gt = 6).order_by("-count")
+#     terms = Current.objects.all().order_by("-count")
+#     return render_to_response("data_view.html", {'terms': terms})
 
 #def getUnproccessedLogs():
         ##return [ (log, str(os.path.getsize(os.path.join(settings.ROOT, "static/logy", log))/1024) + " kB") for log in os.listdir(os.path.join(settings.ROOT, "static/logy")) if "log" in log]
