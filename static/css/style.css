@@ -124,7 +124,7 @@ border-radius: 5px;
 padding: 5px;
 }*/
 
-#data_edit{
+#data_edit, #data_filter{
 margin-top: 20px;
 vertical-align: middle;
 width: 95%;
@@ -134,10 +134,19 @@ display: block;
 border-collapse: collapse;
 }
 
-#data_edit td{
+
+#data_edit td, #data_filter td{
 padding-top: 3px;
 padding-right: 3px;
 padding-left: 10px;
+}
+
+#data_filter td{
+	text-align: center;
+}
+
+#data_filter{
+	margin-top: 20px;
 }
 
 #data_edit tr{
@@ -148,15 +157,14 @@ border: solid grey 1px;
 resize: vertical;
 }
 
-#data_edit_header td{
+th{
 font-size: 14px;
 font-weight: bold;
 padding: 5px;
-background-color: #dedede;
 text-align: center;
 }
 
-#id_note{
+#id_note, #term_search, #date_from, #date_to{
 height: 20px;
 border: solid #dedede 1px;
 /*border-radius: 10px;*/
@@ -202,7 +210,6 @@ font-weight:bold;
 color:#565656;
 cursor:pointer;
 padding:5px 10px 6px 7px;
-width: 150px;
 }
 
 #data_edit .subject{
@@ -210,19 +217,19 @@ width: 150px;
 	color: black;
 }
 
-.disabled{
+#data_edit .disabled{
 	background-color: #f5f5f5;
 }
 
-.accepted{
+#data_edit .accepted{
 	background-color: #83E079;
 }
 
-.denied{
+#data_edit .denied{
 	background-color: #dedede;
 }
 
-.neutral{
+#data_edit .neutral{
 	background-color: #F57171;
 }
 
@@ -234,6 +241,7 @@ width: 150px;
 #hide_processed{
 	margin-top: 20px;
 	margin-left: 40px;
+	width: 150px;
 }
 
 #filter_bar{

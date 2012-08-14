@@ -3,6 +3,36 @@
 {% block content %}
 <div class="home_link"><a href='index'>Zpět na hlavní stránku</a></div>
 <div id="hide_processed" class="button" data-state="on">Schovej zpracované</div>
+
+<table id="data_filter">
+	<thead>
+		<tr>
+			<th>Datum - od:</th>
+			<th>Datum - do:</th>
+			<th>Termín obsahuje:</th>
+			<th></th>
+			<th>Kategorie:</th>
+			<th>Podkategorie:</th>
+			<th>Akvizice:</th>
+			<th>Poznámka obsahuje:</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tr>
+		<form action="data_filter" method="get">
+			<td><input type="text" name="date_from" id="date_from"></td>
+			<td><input type="text" name="date_to" id="date_to"></td>
+			<td><input type="text" name="term_search" id="term_search"></td>
+			<td></td>
+			<td>{{ edit_form.category }}</td>
+			<td>{{ edit_form.subject_category }}</td>
+			<td>{{ edit_form.acquisition }}</td>
+			<td>{{ edit_form.note }}</td>
+			<td><input type="submit" value="Nastav" class="button"></td>
+		</form>
+	</tr>
+</table>
+
 <table id="data_edit">
 <thead>
 <tr id="data_edit_header">

@@ -2,15 +2,15 @@ $(document).ready(function() {
 
     set_original_values();
     store_updated_rows(true);
-
+    // $("#date_from").datepicker();
     // $('#data_edit').dataTable();
 
-    $("td").on("click", "#id_category", function(){
+    $("table").on("click", "#id_category", function(){
         var option = $(this).val();
         update_category($(this), option);
     });
 
-    $("td").on("click", "#id_subject_category", function(){
+    $("#data_edit").on("click", "#id_subject_category", function(){
         var option = $(this).val();
         update_subject_category($(this), option);
     });
