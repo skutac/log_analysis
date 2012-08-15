@@ -78,7 +78,7 @@ function store_updated_rows(select_class, async){
 }
 
     function set_original_values(){
-        $(".processed").each(function(index, tr){
+        $(".processed, #data_filter tr").each(function(index, tr){
             var category = $(tr).find(".category").attr("data-original");
             var current_select = $(tr).find("#id_category");
             update_category(current_select, category);
@@ -93,7 +93,7 @@ function store_updated_rows(select_class, async){
             $(tr).find("#id_note").val(note);
 
             var acquisition = $(tr).find(".acquisition").attr("data-original");
-            if(acquisition == "True"){
+            if(acquisition == "1"){
                 $(tr).find("#id_acquisition").attr("checked", "true");
             }
 

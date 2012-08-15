@@ -28,15 +28,14 @@ form{
 border: solid black 1px;
 border-radius: 10px;
 -moz-border-radius: 10px;
-width: 300px;
 padding: 10px;
 margin-top: 15px;
 margin-bottom: 15px;
 }
 
-#termStatisticForm{
+/*#termStatisticForm{
 width: 400px;
-}
+}*/
 
 .title, #csv{
 font-size: large;
@@ -164,7 +163,7 @@ padding: 5px;
 text-align: center;
 }
 
-#id_note, #term_search, #date_from, #date_to{
+#id_note, #note, #term_search, #date_from, #date_to{
 height: 20px;
 border: solid #dedede 1px;
 /*border-radius: 10px;*/
