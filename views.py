@@ -11,7 +11,7 @@ from django import forms
 from django.conf import settings
 
 from log_analysis.log.models import Current
-from log_analysis.forms import EditForm
+from log_analysis.forms import EditForm, FilterForm
 
 def query_to_dicts(query_string, *query_args):
     """Run a simple query and produce a generator
@@ -47,6 +47,7 @@ def data_edit(request):
     #terms = Current.objects.filter(count__gt = 6).order_by("-count")
     print request.GET
     edit_form = EditForm()
+    filter_form = FilterForm()
     terms = query_to_dicts("""SELECT *  FROM log_current ORDER BY count DESC""")
     terms = list(terms)
     # print terms
@@ -58,7 +59,7 @@ def data_edit(request):
 
     terms, filters = filter_data(terms, dict(request.GET))
 
-    return render_to_response("data_edit.html", {'terms': terms, "edit_form": edit_form, "filters":filters})
+    return render_to_response("data_edit.html", {'terms': terms, "edit_form": edit_form, "filter_form": filter_form, "filters":filters})
 
 def filter_data(terms, filters):
 
@@ -71,10 +72,10 @@ def filter_data(terms, filters):
             if f == "note":
                 terms = [t for t in terms if filters[f] in t["note"]]
 
-            if f == "category" and filters[f] != "0":
+            if f == "filter_category" and filters[f] != "0":
                 terms = [t for t in terms if int(filters[f]) == t["category_id"]]
 
-            if f == "subject_category" and filters[f] != "0":
+            if f == "filter_subject_category" and filters[f] != "0":
                 terms = [t for t in terms if int(filters[f]) == t["subjectcategory_id"]]
 
             if f == "date_from":

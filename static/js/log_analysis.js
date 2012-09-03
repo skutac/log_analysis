@@ -5,6 +5,16 @@ $(document).ready(function() {
     // $("#date_from").datepicker();
     // $('#data_edit').dataTable();
 
+    $("#id_filter_category").multiselect({checkAllText: "Označ vše", uncheckAllText: "Odznač vše",show: ["slide", 100], 
+        position: {
+        my: 'center',
+        at: 'center'}});
+
+    $("#id_filter_subject_category").multiselect({checkAllText: "Označ vše", uncheckAllText: "Odznač vše",show: ["slide", 100], 
+        position: {
+        my: 'center',
+        at: 'center'}});
+
     $("table").on("click", "#id_category", function(){
         var option = $(this).val();
         update_category($(this), option);

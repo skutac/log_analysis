@@ -23,3 +23,7 @@ class EditForm(forms.Form):
     subject_category = forms.ChoiceField(subject_categories, widget=forms.Select(attrs={'disabled':'disabled'}))
     acquisition = forms.BooleanField()
     note = forms.CharField(widget=forms.Textarea)
+
+class FilterForm(forms.Form):
+    filter_subject_category = forms.MultipleChoiceField(required=False, widget=forms.SelectMultiple, choices=subject_categories[1:])
+    filter_category = forms.MultipleChoiceField(required=False, widget=forms.SelectMultiple, choices=categories[1:])

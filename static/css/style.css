@@ -249,3 +249,8 @@ padding:5px 10px 6px 7px;
 	bottom: 100px;
 	background-color: #FFFFFF;
 }
+
+#data_filter button{
+	padding-bottom: 10px;
+	padding-top: 0px;
+}
