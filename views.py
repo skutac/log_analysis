@@ -50,7 +50,6 @@ def data_edit(request):
     filter_form = FilterForm()
     terms = query_to_dicts("""SELECT *  FROM log_current ORDER BY count DESC""")
     terms = list(terms)
-    # print terms
 
     for i in xrange(len(terms)):
         terms[i]["subject"] = terms[i]["subject"].decode("utf8")
@@ -58,50 +57,44 @@ def data_edit(request):
 
 
     terms, filters = filter_data(terms, dict(request.GET))
-
+    
     return render_to_response("data_edit.html", {'terms': terms, "edit_form": edit_form, "filter_form": filter_form, "filters":filters})
 
 def filter_data(terms, filters):
 
     for f in filters:
-        filters[f] = filters[f][0]
+        print f
         if filters[f]:
-            if f == "term_search":
-                terms = [t for t in terms if filters[f] in t["subject"]]
+            # if f == "term_search":
+            #     terms = [t for t in terms if filters[f] in t["subject"]]
 
-            if f == "note":
-                terms = [t for t in terms if filters[f] in t["note"]]
+            # if f == "note":
+            #     terms = [t for t in terms if filters[f] in t["note"]]
 
-            if f == "filter_category" and filters[f] != "0":
-                terms = [t for t in terms if int(filters[f]) == t["category_id"]]
+            if f == "filter_category" and filters[f][0] != "0":
+                filters[f] = [int(num) for num in filters[f]]
+                terms = [t for t in terms if t["category_id"] in [int(num) for num in filters[f]]]
+                filters[f] = ";".join([str(num) for num in filters[f]])
 
-            if f == "filter_subject_category" and filters[f] != "0":
-                terms = [t for t in terms if int(filters[f]) == t["subjectcategory_id"]]
+            if f == "filter_subject_category" and filters[f][0] != "0":
+                filters[f] = [int(num) for num in filters[f]]
+                terms = [t for t in terms if t["subjectcategory_id"] in filters[f]]
+                filters[f] = ";".join([str(num) for num in filters[f]])
 
             if f == "date_from":
-                month, year = int(filters[f].split("/")[0]), int(filters[f].split("/")[1])
-                terms = [t for t in terms if t["date"].month>=month and t["date"].year>=year]
+                filters[f] = filters[f][0]
+                if filters[f]:
+                    month, year = int(filters[f].split("/")[0]), int(filters[f].split("/")[1])
+                    terms = [t for t in terms if t["date"].month>=month and t["date"].year>=year]
             
             if f == "date_to":
-                month, year = int(filters[f].split("/")[0]), int(filters[f].split("/")[1])
-                terms = [t for t in terms if t["date"].month<=month and t["date"].year<=year]
+                filters[f] = filters[f][0]
+                if filters[f]:
+                    month, year = int(filters[f].split("/")[0]), int(filters[f].split("/")[1])
+                    terms = [t for t in terms if t["date"].month<=month and t["date"].year<=year]
 
             if f == "acquisition":
                 filters[f] = "1"
                 terms = [t for t in terms if t["acquisition"]]
 
     return terms, filters
-
-
-# def data_view(request):
-#     """Returns view on current data ordered by count"""
-#     #terms = Current.objects.filter(count__gt = 6).order_by("-count")
-#     terms = Current.objects.all().order_by("-count")
-#     return render_to_response("data_view.html", {'terms': terms})
-
-#def getUnproccessedLogs():
-        ##return [ (log, str(os.path.getsize(os.path.join(settings.ROOT, "static/logy", log))/1024) + " kB") for log in os.listdir(os.path.join(settings.ROOT, "static/logy")) if "log" in log]
-        #return [ (log, str(os.path.getsize(os.path.join(settings.ROOT, "static/logy", log))/1024) + " kB") for log in os.listdir(os.path.join(settings.ROOT,
-#"static/logy"))]
-#def getArchiveFiles():
-        #return [ archiveFile for archiveFile in os.listdir(os.path.join(settings.ROOT, "static/logy_csv")) ]

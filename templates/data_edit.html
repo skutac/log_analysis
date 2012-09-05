@@ -10,8 +10,8 @@
 			<th>Datum - od:</th>
 			<th>Datum - do:</th>
 			<!-- <th>Termín obsahuje:</th> -->
-			<th>Kategorie:</th>
-			<th>Podkategorie:</th>
+			<th></th>
+			<th></th>
 			<th>Akvizice:</th>
 			<!-- <th>Poznámka obsahuje:</th> -->
 			<th></th>
@@ -22,8 +22,8 @@
 			<td><input type="text" value="{{ filters.date_from }}" name="date_from" id="date_from"></td>
 			<td><input type="text" value="{{ filters.date_to }}" name="date_to" id="date_to"></td>
 			<!-- <td><input type="text" value="{{ filters.term_search }}" name="term_search" id="term_search"></td> -->
-			<td data-original="{{filters.category}}">{{ filter_form.filter_category }}</td>
-			<td data-original="{{filters.subject_category}}">{{ filter_form.filter_subject_category }}</td>
+			<td id="filter_category" data-original="{{filters.filter_category}}">{{ filter_form.filter_category }}</td>
+			<td id="filter_subject_category" data-original="{{filters.filter_subject_category}}">{{ filter_form.filter_subject_category }}</td>
 			<td class="acquisition" data-original="{{filters.acquisition}}">{{ edit_form.acquisition }}</td>
 			<!-- <td><input type="text" value="{{ filters.note }}" name="note" id="note"></td> -->
 			<td><input type="submit" value="Nastav" class="button"></td>
