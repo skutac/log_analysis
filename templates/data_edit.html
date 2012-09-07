@@ -2,11 +2,12 @@
 
 {% block content %}
 <div class="home_link"><a href='index'>Zpět na hlavní stránku</a></div>
-<div id="hide_processed" class="button" data-state="on">Schovej zpracované</div>
+<!-- <div id="hide_processed" class="button" data-state="on">Schovej zpracované</div> -->
 
 <table id="data_filter">
 	<thead>
 		<tr>
+			<th>Schovat zpracované:</th>
 			<th>Datum - od:</th>
 			<th>Datum - do:</th>
 			<!-- <th>Termín obsahuje:</th> -->
@@ -18,7 +19,8 @@
 		</tr>
 	</thead>
 	<tr>
-		<form action="data_edit" method="get">
+		<form action="data_edit" method="get" id="filter_form">
+			<td class="hide_processed" data-original="{{filters.hide_processed}}">{{ filter_form.hide_processed }}</td>
 			<td><input type="text" value="{{ filters.date_from }}" name="date_from" id="date_from"></td>
 			<td><input type="text" value="{{ filters.date_to }}" name="date_to" id="date_to"></td>
 			<!-- <td><input type="text" value="{{ filters.term_search }}" name="term_search" id="term_search"></td> -->
@@ -28,9 +30,13 @@
 			<!-- <td><input type="text" value="{{ filters.note }}" name="note" id="note"></td> -->
 			<td><input type="submit" value="Nastav" class="button"></td>
 			<td><a href="./data_edit"><div class="button">Storno</div></a></td>
+			<input id="page_number" type="hidden" name="page" value={{ filters.page }} />
 		</form>
 	</tr>
 </table>
+
+<div class="pagination"><span class="{{ previous }}" id="previous_page">&lt; předchozí</span> - <span class="{{ next }}" id="next_page"> další &gt;</span></div>
+
 
 <table id="data_edit">
 <thead>
@@ -68,5 +74,6 @@
 </tr>
 {% endfor %}
 </table>
+<div class="pagination"><span class="{{ previous }}" id="previous_page">&lt; předchozí</span> - <span class="{{ next }}" id="next_page"> další &gt;</span>
 <div class="home_link"><a href='index'>Zpět na hlavní stránku</a></div>
 {% endblock %}

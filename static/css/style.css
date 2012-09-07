@@ -126,11 +126,12 @@ padding: 5px;
 #data_edit, #data_filter{
 margin-top: 20px;
 vertical-align: middle;
-width: 95%;
+width: 90%;
 margin-left: auto;
 margin-right: auto;
-display: block;
+/*display: block;*/
 border-collapse: collapse;
+max-width: 1400px;
 }
 
 
@@ -270,4 +271,28 @@ padding:5px 10px 6px 7px;
 
 .ui-multiselect-menu ul{
 	list-style-type: none;
+}
+
+.pagination{
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+	text-align: center;
+	margin-top: 20px;
+	font-size: 14px;
+	text-decoration: none;
+}
+
+.active:hover{
+	cursor: pointer;
+	color: grey;
+}
+
+.active{
+	color: black;
+	font-weight: bold;
+}
+
+.inactive{
+	color: grey;
 }

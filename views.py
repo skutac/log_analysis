@@ -55,15 +55,20 @@ def data_edit(request):
         terms[i]["subject"] = terms[i]["subject"].decode("utf8")
         terms[i]["note"] = terms[i]["note"].decode("utf8")
 
+    page_interval = 150
+    terms, filters = filter_data(terms, dict(request.GET), page_interval)
+    next, previous = get_pagination(len(terms), page_interval, filters["page"])
 
-    terms, filters = filter_data(terms, dict(request.GET))
+    if next == "inactive":
+        terms = terms[page_interval*filters["page"]:]
+    else:
+        terms = terms[page_interval*filters["page"]:page_interval*filters["page"]+page_interval]
     
-    return render_to_response("data_edit.html", {'terms': terms, "edit_form": edit_form, "filter_form": filter_form, "filters":filters})
+    return render_to_response("data_edit.html", {'terms': terms, "edit_form": edit_form, "filter_form": filter_form, "filters":filters, "next": next, "previous":previous})
 
-def filter_data(terms, filters):
-
+def filter_data(terms, filters, interval):
+    print filters
     for f in filters:
-        print f
         if filters[f]:
             # if f == "term_search":
             #     terms = [t for t in terms if filters[f] in t["subject"]]
@@ -97,4 +102,30 @@ def filter_data(terms, filters):
                 filters[f] = "1"
                 terms = [t for t in terms if t["acquisition"]]
 
+            if f == "hide_processed":
+                filters[f] = filters[f][0]
+                terms = [t for t in terms if not t["processed"]]
+
+    if "page" in filters.keys():
+        filters["page"] = int(filters["page"][0])
+    else:
+        filters["page"] = 0
+
     return terms, filters
+
+def get_pagination(count, interval, page):
+    print page, interval, count
+    page_count = count/interval
+    next = "active"
+    previous = "active"
+
+    if page == 0:
+        previous = "inactive"
+        if count <= interval:
+            next = "inactive"
+    else:
+        previous = "active"
+        if count <= interval*(page+1):
+            next = "inactive"
+
+    return next, previous

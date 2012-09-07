@@ -15,7 +15,7 @@ $(document).ready(function() {
         my: 'center',
         at: 'center'}, height: "auto", selectedText: "#", classes: "filter_subject_category"});
 
-    set_original_filter_categories();
+    set_original_filter_values();
 
     $("table").on("click", "#id_category", function(){
         var option = $(this).val();
@@ -40,26 +40,39 @@ $(document).ready(function() {
         store_updated_rows("changed", false);  
     });
 
-    $("#hide_processed").bind("click", function(){
-        var state = $(this).attr("data-state");
-        if(state == "on"){
-            $(".processed").hide("fast");
-            $(this).attr("data-state", "off");
-            $(this).text("Ukaž zpracované");
-        }
-        else{
-            $(".processed").show("fast");
-            $(this).attr("data-state", "on");
-            $(this).text("Schovej zpracované");
-        }
+
+    $("#next_page.active").click(function(){
+        var number = parseInt($("#page_number").val()) + 1;
+        $("#page_number").val(number);
+        $("#filter_form").submit();
     });
+
+    $("#previous_page.active").click(function(){
+        var number = parseInt($("#page_number").val()) - 1;
+        $("#page_number").val(number);
+        $("#filter_form").submit();
+    });
+
+    // $("#hide_processed").bind("click", function(){
+    //     var state = $(this).attr("data-state");
+    //     if(state == "on"){
+    //         $(".processed").hide("fast");
+    //         $(this).attr("data-state", "off");
+    //         $(this).text("Ukaž zpracované");
+    //     }
+    //     else{
+    //         $(".processed").show("fast");
+    //         $(this).attr("data-state", "on");
+    //         $(this).text("Schovej zpracované");
+    //     }
+    // });
 
 
     $('.resized textarea').autosize();
 
 });
 
-function set_original_filter_categories(){    
+function set_original_filter_values(){    
     var categories = $("#filter_category").attr("data-original").split(";");
     var subject_categories = $("#filter_subject_category").attr("data-original").split(";");
     var option;
@@ -69,7 +82,6 @@ function set_original_filter_categories(){
             .attr('checked',true)
             .click()
             .attr('checked',true);
-        // option.click();
     };
 
     for(var i in subject_categories){
@@ -78,6 +90,13 @@ function set_original_filter_categories(){
             .click()
             .attr('checked',true);
     };
+
+    var hide_processed = $(".hide_processed").attr("data-original");
+    if(hide_processed == "on"){
+        $("#id_hide_processed").attr("checked", "true");
+    }
+
+
     
 }
 
