@@ -1,36 +1,45 @@
 #coding: utf-8
 import re, datetime, os, csv
 
-from log_analysis.log.models import Old, Current, Terms
+from log_analysis.log.models import Old, Current, Terms, Category, SubjectCategory
 from log_analysis.psh_db.models import Hesla, Ekvivalence, Varianta
+from log_analysis.views import query_to_dicts
 
 from django.conf import settings
 from django.utils.encoding import smart_str, smart_unicode
 
-def saveToCurrent(term, count):
-    print term, count
+hesla = query_to_dicts("""SELECT heslo FROM psh_db.hesla""")
+hesla = set([h["heslo"].encode("utf8") for h in hesla])
+
+ekvivalence = query_to_dicts("""SELECT ekvivalent FROM psh_db.ekvivalence""")
+ekvivalence = set([h["ekvivalent"].encode("utf8") for h in ekvivalence])
+
+varianta = query_to_dicts("""SELECT varianta FROM psh_db.varianta""")
+varianta = set([h["varianta"].encode("utf8") for h in varianta])
+
+
+def save_to_current(term, count):
     """Updates database with current subject:count pair. Creates it if not already there."""
-    # old = Old.objects.filter(subject=term)
-    hesla = Hesla.objects.using('psh_db').filter(heslo=term)
-    ekvivalence = Ekvivalence.objects.using('psh_db').filter(ekvivalent=term)
-    varianta = Varianta.objects.using('psh_db').filter(varianta=term)
-    test = len(hesla) + len(ekvivalence) + len(varianta)
-    if test == 0:
-        obj, created = Current.objects.get_or_create(subject=term)
-        if created:
-            obj.count = int(count)
-        else:
-            obj.count += int(count)
-        obj.save()
-    # obj.count = obj.count + int(count)
-    #      obj.save()
-    # except:
-    #         obj = Current(subject=term, count=int(count))
-    #         obj.save()
+    attrs = {"subject":term, "count":count}
+    if term in hesla or term in ekvivalence:
+        attrs["category"] = Category.objects.get(categoryid=4)
+        attrs["subjectcategory"] = SubjectCategory.objects.get(subjectcategoryid=11)
+        attrs["processed"] = 1
+    elif term in varianta:
+        attrs["category"] = Category.objects.get(categoryid=4)
+        attrs["subjectcategory"] = SubjectCategory.objects.get(subjectcategoryid=12)
+        attrs["processed"] = 1
+    
+    try:
+        obj = Current.objects.get(subject=term)
+        obj.count += int(count)
+    except Exception:
+        obj = Current(**attrs)
 
+    obj.save()
+    return
 
-
-def storeSubjectsFromGAExport(export):
+def store_subjects_from_GAExport(export):
     """Stores subjects from GA CSV export."""
     old_count = Current.objects.count()
     switch = False
@@ -48,7 +57,7 @@ def storeSubjectsFromGAExport(export):
                 if term == old:
                     switch = False
                 else:
-                    saveToCurrent(term, count)
+                    save_to_current(term, count)
                     old = term
 
         elif "Vyhledávací dotaz," in line or "Search Term," in line:
@@ -131,3 +140,6 @@ def storeSubjectsFromGAExport(export):
 
 #     csv.close()   
 #     return filename
+
+if __name__ == '__main__':
+    print hesla

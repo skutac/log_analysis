@@ -53,6 +53,11 @@ $(document).ready(function() {
         $("#filter_form").submit();
     });
 
+    $("#set_filters").click(function(){
+        $("#page_number").val(0);
+        $("#filter_form").submit();
+    });
+
     // $("#hide_processed").bind("click", function(){
     //     var state = $(this).attr("data-state");
     //     if(state == "on"){
@@ -69,6 +74,11 @@ $(document).ready(function() {
 
 
     $('.resized textarea').autosize();
+
+    // $(".changeable").change(function(){
+    //     $(".active").attr("class", "inactive");
+    //     $("#next_page.active").unbind("click");
+    // });
 
 });
 
@@ -187,6 +197,16 @@ function store_updated_rows(select_class, async){
             tr.removeClass("neutral");
             tr.removeClass("denied");
             tr.addClass("accepted");
+        }
+        else if(option == 11){
+            tr.removeClass("neutral");
+            tr.removeClass("denied");
+            tr.addClass("psh_descriptor");
+        }
+        else if(option == 12){
+            tr.removeClass("neutral");
+            tr.removeClass("denied");
+            tr.addClass("psh_nondescriptor");
         }
         else if(option == "None"|option == 0){
             tr.addClass("neutral");

@@ -21,14 +21,14 @@
 	<tr>
 		<form action="data_edit" method="get" id="filter_form">
 			<td class="hide_processed" data-original="{{filters.hide_processed}}">{{ filter_form.hide_processed }}</td>
-			<td><input type="text" value="{{ filters.date_from }}" name="date_from" id="date_from"></td>
+			<td><input type="text" value="{{ filters.date_from }}" name="date_from" id="date_from" class="changeable"></td>
 			<td><input type="text" value="{{ filters.date_to }}" name="date_to" id="date_to"></td>
 			<!-- <td><input type="text" value="{{ filters.term_search }}" name="term_search" id="term_search"></td> -->
 			<td id="filter_category" data-original="{{filters.filter_category}}">{{ filter_form.filter_category }}</td>
 			<td id="filter_subject_category" data-original="{{filters.filter_subject_category}}">{{ filter_form.filter_subject_category }}</td>
 			<td class="acquisition" data-original="{{filters.acquisition}}">{{ edit_form.acquisition }}</td>
 			<!-- <td><input type="text" value="{{ filters.note }}" name="note" id="note"></td> -->
-			<td><input type="submit" value="Nastav" class="button"></td>
+			<td><input type="submit" value="Nastav" class="button" id="set_filters"></td>
 			<td><a href="./data_edit"><div class="button">Storno</div></a></td>
 			<input id="page_number" type="hidden" name="page" value={{ filters.page }} />
 		</form>

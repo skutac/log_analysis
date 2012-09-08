@@ -39,10 +39,10 @@ def store_updated_row(request):
     except Exception, e:
         print str(e)
 
-def storeGAExport(request):
+def store_GAExport(request):
     """Accepts GA CSV export with unproccessed subjects""" 
     if request.FILES:
-        return render_to_response("result.html", {"msg": upload.storeSubjectsFromGAExport(request.FILES["file"]), })
+        return render_to_response("result.html", {"msg": upload.store_subjects_from_GAExport(request.FILES["file"]), })
     else:
         return render_to_response("error.html", {'error': 'Nebyl vybrán žádný soubor.'})
 

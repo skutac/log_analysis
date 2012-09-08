@@ -233,6 +233,14 @@ padding:5px 10px 6px 7px;
 	background-color: #F57171;
 }
 
+#data_edit .psh_descriptor{
+	background-color: #558FF2;
+}
+
+#data_edit .psh_nondescriptor{
+	background-color: #A2C0F5;
+}
+
 .home_link{
 	margin-top: 15px;
 	font-weight: bold;

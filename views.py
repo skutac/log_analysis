@@ -45,7 +45,7 @@ def index(request):
 def data_edit(request):
     """Returns view on current data ordered by count"""
     #terms = Current.objects.filter(count__gt = 6).order_by("-count")
-    print request.GET
+    # print request.GET
     edit_form = EditForm()
     filter_form = FilterForm()
     terms = query_to_dicts("""SELECT *  FROM log_current ORDER BY count DESC""")
@@ -67,7 +67,6 @@ def data_edit(request):
     return render_to_response("data_edit.html", {'terms': terms, "edit_form": edit_form, "filter_form": filter_form, "filters":filters, "next": next, "previous":previous})
 
 def filter_data(terms, filters, interval):
-    print filters
     for f in filters:
         if filters[f]:
             # if f == "term_search":
@@ -114,7 +113,6 @@ def filter_data(terms, filters, interval):
     return terms, filters
 
 def get_pagination(count, interval, page):
-    print page, interval, count
     page_count = count/interval
     next = "active"
     previous = "active"
