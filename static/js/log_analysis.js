@@ -194,26 +194,31 @@ function store_updated_rows(select_class, async){
         var tr = current_select.parent("td").parent("tr");
         
         if(option == 1|option == 2){
-            tr.removeClass("neutral");
-            tr.removeClass("denied");
-            tr.addClass("accepted");
+            // tr.removeClass("neutral");
+            // tr.removeClass("denied");
+            // tr.addClass("accepted");
+            tr.attr("class", "processed accepted");
         }
         else if(option == 11){
-            tr.removeClass("neutral");
-            tr.removeClass("denied");
-            tr.addClass("psh_descriptor");
+            // tr.removeClass("neutral");
+            // tr.removeClass("denied");
+            // tr.addClass("psh_descriptor");
+            tr.attr("class", "processed psh_descriptor");
         }
         else if(option == 12){
-            tr.removeClass("neutral");
-            tr.removeClass("denied");
-            tr.addClass("psh_nondescriptor");
+            // tr.removeClass("neutral");
+            // tr.removeClass("denied");
+            // tr.addClass("psh_nondescriptor");
+            tr.attr("class", "processed psh_nondescriptor");
         }
         else if(option == "None"|option == 0){
-            tr.addClass("neutral");
+            // tr.addClass("neutral");
+            tr.attr("class", "neutral");
         }
         else{
-            tr.removeClass("neutral");
-            tr.removeClass("accepted");
-            tr.addClass("denied");
+            // tr.removeClass("neutral");
+            // tr.removeClass("accepted");
+            // tr.addClass("denied");
+            tr.attr("class", "processed denied");
         }
     }
