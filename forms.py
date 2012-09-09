@@ -27,4 +27,5 @@ class EditForm(forms.Form):
 class FilterForm(forms.Form):
     filter_subject_category = forms.MultipleChoiceField(required=False, widget=forms.SelectMultiple, choices=subject_categories[1:])
     filter_category = forms.MultipleChoiceField(required=False, widget=forms.SelectMultiple, choices=categories[1:])
+    graph = forms.MultipleChoiceField(required=False, widget=forms.Select(), choices=[(0, "-"), (1, "kategorie"), (2, "podkategorie"), (3, "PSH")])
     hide_processed = forms.BooleanField()

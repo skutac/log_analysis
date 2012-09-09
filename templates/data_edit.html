@@ -1,6 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+{% if filters.graph %}
+<script type="text/javascript">
+{% autoescape off %}
+google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable({{ graph_data }});
+        var options = {
+          title: '',
+          height: "600",
+          is3D: true,
+          pieSliceText: "percentage",
+          backgroundColor: "#EBE8E9",
+          chartArea:{left:"auto",top:"auto",width:"80%",height:"80%"}
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('graph'));
+        chart.draw(data, options);
+      }
+{% endautoescape %}
+</script>
+{% endif %}
 <div class="home_link"><a href='index'>Zpět na hlavní stránku</a></div>
 <!-- <div id="hide_processed" class="button" data-state="on">Schovej zpracované</div> -->
 
@@ -15,6 +38,8 @@
 			<th></th>
 			<th>Akvizice:</th>
 			<!-- <th>Poznámka obsahuje:</th> -->
+			<th>Graf:</th>
+			<th></th>
 			<th></th>
 		</tr>
 	</thead>
@@ -28,6 +53,7 @@
 			<td id="filter_subject_category" data-original="{{filters.filter_subject_category}}">{{ filter_form.filter_subject_category }}</td>
 			<td class="acquisition" data-original="{{filters.acquisition}}">{{ edit_form.acquisition }}</td>
 			<!-- <td><input type="text" value="{{ filters.note }}" name="note" id="note"></td> -->
+			<td class="graph" data-original="{{filters.graph}}">{{ filter_form.graph }}</td>
 			<td><input type="submit" value="Nastav" class="button" id="set_filters"></td>
 			<td><a href="./data_edit"><div class="button">Storno</div></a></td>
 			<input id="page_number" type="hidden" name="page" value={{ filters.page }} />
@@ -35,8 +61,9 @@
 	</tr>
 </table>
 
-<div class="pagination"><span class="{{ previous }}" id="previous_page">&lt; předchozí</span> - <span class="{{ next }}" id="next_page"> další &gt;</span></div>
+<div id="graph"></div>
 
+<div class="pagination"><span class="{{ previous }}" id="previous_page">&lt; předchozí</span> - <span class="{{ next }}" id="next_page"> další &gt;</span></div>
 
 <table id="data_edit">
 <thead>

@@ -1,5 +1,5 @@
 #coding: utf-8
-import os
+import os, json
 
 from itertools import *
 
@@ -10,7 +10,7 @@ from django.shortcuts import render_to_response
 from django import forms
 from django.conf import settings
 
-from log_analysis.log.models import Current
+from log_analysis.log.models import Current, Category, SubjectCategory
 from log_analysis.forms import EditForm, FilterForm
 
 def query_to_dicts(query_string, *query_args):
@@ -45,7 +45,7 @@ def index(request):
 def data_edit(request):
     """Returns view on current data ordered by count"""
     #terms = Current.objects.filter(count__gt = 6).order_by("-count")
-    # print request.GET
+    print request.GET
     edit_form = EditForm()
     filter_form = FilterForm()
     terms = query_to_dicts("""SELECT *  FROM log_current ORDER BY count DESC""")
@@ -59,12 +59,17 @@ def data_edit(request):
     terms, filters = filter_data(terms, dict(request.GET), page_interval)
     next, previous = get_pagination(len(terms), page_interval, filters["page"])
 
+    graph_data = False
+    if "graph" in filters.keys():
+        graph_data = get_graph_data(terms, filters["graph"])
+
+
     if next == "inactive":
         terms = terms[page_interval*filters["page"]:]
     else:
         terms = terms[page_interval*filters["page"]:page_interval*filters["page"]+page_interval]
     
-    return render_to_response("data_edit.html", {'terms': terms, "edit_form": edit_form, "filter_form": filter_form, "filters":filters, "next": next, "previous":previous})
+    return render_to_response("data_edit.html", {'terms': terms, "edit_form": edit_form, "filter_form": filter_form, "filters":filters, "next": next, "previous":previous, "graph_data": graph_data})
 
 def filter_data(terms, filters, interval):
     for f in filters:
@@ -80,30 +85,35 @@ def filter_data(terms, filters, interval):
                 terms = [t for t in terms if t["category_id"] in [int(num) for num in filters[f]]]
                 filters[f] = ";".join([str(num) for num in filters[f]])
 
-            if f == "filter_subject_category" and filters[f][0] != "0":
+            elif f == "filter_subject_category" and filters[f][0] != "0":
                 filters[f] = [int(num) for num in filters[f]]
                 terms = [t for t in terms if t["subjectcategory_id"] in filters[f]]
                 filters[f] = ";".join([str(num) for num in filters[f]])
 
-            if f == "date_from":
+            elif f == "date_from":
                 filters[f] = filters[f][0]
                 if filters[f]:
                     month, year = int(filters[f].split("/")[0]), int(filters[f].split("/")[1])
                     terms = [t for t in terms if t["date"].month>=month and t["date"].year>=year]
             
-            if f == "date_to":
+            elif f == "date_to":
                 filters[f] = filters[f][0]
                 if filters[f]:
                     month, year = int(filters[f].split("/")[0]), int(filters[f].split("/")[1])
                     terms = [t for t in terms if t["date"].month<=month and t["date"].year<=year]
 
-            if f == "acquisition":
+            elif f == "acquisition":
                 filters[f] = "1"
                 terms = [t for t in terms if t["acquisition"]]
 
-            if f == "hide_processed":
+            elif f == "hide_processed":
                 filters[f] = filters[f][0]
                 terms = [t for t in terms if not t["processed"]]
+
+            elif f == "graph":
+                filters[f] = int(filters[f][0])
+
+
 
     if "page" in filters.keys():
         filters["page"] = int(filters["page"][0])
@@ -127,3 +137,43 @@ def get_pagination(count, interval, page):
             next = "inactive"
 
     return next, previous
+
+def get_graph_data(terms, graph_id):
+    terms = [t for t in terms if t["processed"]]
+    if graph_id == 1:
+        key = "category_id"
+        keys = set([t[key] for t in terms])
+        keys2label = {}
+        categories = list(query_to_dicts("""SELECT * FROM log_category"""))
+
+        keys2label = {}
+        for c in categories:
+            keys2label[c["categoryid"]] = c["category"].decode("utf8").encode("cp1250")
+
+    elif graph_id == 2:
+        terms = [t for t in terms if t["category_id"] == 4]
+        key = "subjectcategory_id"
+        keys = set([t[key] for t in terms])
+        keys2label = {}
+        for k in keys:
+            keys2label[k] = SubjectCategory.objects.get(subjectcategoryid=k).subjectcategory
+    elif graph_id == 3:
+        pass
+
+    else:
+        return False
+
+    data = {}
+    for k in keys:
+        data[keys2label[k]] = 0
+
+    for t in terms:
+        data[keys2label[t[key]]] += 1
+    print data
+
+    data = [[d, data[d]] for d in data.keys()]
+
+    return data
+
+
+

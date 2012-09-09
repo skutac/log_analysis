@@ -196,7 +196,7 @@ text-align: center;
 text-align: center;
 }
 
-.button, button{
+.button, button, .graph select{
 border-radius: 5px;
 -moz-border-radius: 5px;
 text-align: center;
@@ -303,4 +303,13 @@ padding:5px 10px 6px 7px;
 
 .inactive{
 	color: grey;
+}
+
+#graph{
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	margin-top: 20px;
 }
