@@ -61,14 +61,14 @@ def data_edit(request):
 
     graph_data = False
     if "graph" in filters.keys():
-        graph_data = get_graph_data(terms, filters["graph"])
+        graph_data = get_graph_data(terms, filters)
 
 
     if next == "inactive":
         terms = terms[page_interval*filters["page"]:]
     else:
         terms = terms[page_interval*filters["page"]:page_interval*filters["page"]+page_interval]
-    
+    print filters
     return render_to_response("data_edit.html", {'terms': terms, "edit_form": edit_form, "filter_form": filter_form, "filters":filters, "next": next, "previous":previous, "graph_data": graph_data})
 
 def filter_data(terms, filters, interval):
@@ -138,40 +138,51 @@ def get_pagination(count, interval, page):
 
     return next, previous
 
-def get_graph_data(terms, graph_id):
+def get_graph_data(terms, filters):
+    graph_id = filters["graph"]
     terms = [t for t in terms if t["processed"]]
+
     if graph_id == 1:
         key = "category_id"
         keys = set([t[key] for t in terms])
-        keys2label = {}
         categories = list(query_to_dicts("""SELECT * FROM log_category"""))
 
         keys2label = {}
         for c in categories:
-            keys2label[c["categoryid"]] = c["category"].decode("utf8").encode("cp1250")
+            keys2label[c["categoryid"]] = c["category"]
 
     elif graph_id == 2:
         terms = [t for t in terms if t["category_id"] == 4]
         key = "subjectcategory_id"
         keys = set([t[key] for t in terms])
+        subject_categories = list(query_to_dicts("""SELECT * FROM log_subjectcategory"""))
         keys2label = {}
-        for k in keys:
-            keys2label[k] = SubjectCategory.objects.get(subjectcategoryid=k).subjectcategory
+
+        for c in subject_categories:
+            keys2label[c["subjectcategoryid"]] = c["subjectcategory"]
+
     elif graph_id == 3:
         pass
+
+    elif graph_id == 4:
+        terms = [t for t in terms if t["category_id"] == 1]
+        key = "acquisition"
+        keys = set([t[key] for t in terms])
+        keys2label = {0:"fond", 1:"akvizice"}
 
     else:
         return False
 
     data = {}
+    
     for k in keys:
         data[keys2label[k]] = 0
 
     for t in terms:
         data[keys2label[t[key]]] += 1
-    print data
 
     data = [[d, data[d]] for d in data.keys()]
+    data.insert(0, ["Kategorie", 0])
 
     return data
 

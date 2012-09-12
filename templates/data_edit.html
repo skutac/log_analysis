@@ -4,13 +4,17 @@
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 {% if filters.graph %}
 <script type="text/javascript">
-{% autoescape off %}
+
 google.load("visualization", "1", {packages:["corechart"]});
       google.setOnLoadCallback(drawChart);
       function drawChart() {
-        var data = google.visualization.arrayToDataTable({{ graph_data }});
+        var data = google.visualization.arrayToDataTable([
+        	{% for item in graph_data %}
+        		["{{ item.0 }}", {{ item.1 }}],
+        	{% endfor %}
+        	]);
         var options = {
-          title: '',
+          title: '{{ filters.date_from }} - {{ filters.date_to }}',
           height: "600",
           is3D: true,
           pieSliceText: "percentage",
@@ -21,7 +25,6 @@ google.load("visualization", "1", {packages:["corechart"]});
         var chart = new google.visualization.PieChart(document.getElementById('graph'));
         chart.draw(data, options);
       }
-{% endautoescape %}
 </script>
 {% endif %}
 <div class="home_link"><a href='index'>Zpět na hlavní stránku</a></div>
@@ -30,7 +33,6 @@ google.load("visualization", "1", {packages:["corechart"]});
 <table id="data_filter">
 	<thead>
 		<tr>
-			<th>Schovat zpracované:</th>
 			<th>Datum - od:</th>
 			<th>Datum - do:</th>
 			<!-- <th>Termín obsahuje:</th> -->
@@ -38,6 +40,7 @@ google.load("visualization", "1", {packages:["corechart"]});
 			<th></th>
 			<th>Akvizice:</th>
 			<!-- <th>Poznámka obsahuje:</th> -->
+			<th>Schovat zpracované:</th>
 			<th>Graf:</th>
 			<th></th>
 			<th></th>
@@ -45,7 +48,6 @@ google.load("visualization", "1", {packages:["corechart"]});
 	</thead>
 	<tr>
 		<form action="data_edit" method="get" id="filter_form">
-			<td class="hide_processed" data-original="{{filters.hide_processed}}">{{ filter_form.hide_processed }}</td>
 			<td><input type="text" value="{{ filters.date_from }}" name="date_from" id="date_from" class="changeable"></td>
 			<td><input type="text" value="{{ filters.date_to }}" name="date_to" id="date_to"></td>
 			<!-- <td><input type="text" value="{{ filters.term_search }}" name="term_search" id="term_search"></td> -->
@@ -53,6 +55,7 @@ google.load("visualization", "1", {packages:["corechart"]});
 			<td id="filter_subject_category" data-original="{{filters.filter_subject_category}}">{{ filter_form.filter_subject_category }}</td>
 			<td class="acquisition" data-original="{{filters.acquisition}}">{{ edit_form.acquisition }}</td>
 			<!-- <td><input type="text" value="{{ filters.note }}" name="note" id="note"></td> -->
+			<td class="hide_processed" data-original="{{filters.hide_processed}}">{{ filter_form.hide_processed }}</td>
 			<td class="graph" data-original="{{filters.graph}}">{{ filter_form.graph }}</td>
 			<td><input type="submit" value="Nastav" class="button" id="set_filters"></td>
 			<td><a href="./data_edit"><div class="button">Storno</div></a></td>
@@ -72,7 +75,7 @@ google.load("visualization", "1", {packages:["corechart"]});
 <th>Termín</th>
 <th>Počet</th>
 <th>Kategorie</th>
-<th>Upřesnění</th>
+<th>Podkategorie</th>
 <th>Akvizice</th>
 <th>Poznámka</th>
 </tr>

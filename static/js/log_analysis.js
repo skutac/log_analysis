@@ -2,8 +2,6 @@ $(document).ready(function() {
 
     set_original_values();
     store_updated_rows(true);
-    // $("#date_from").datepicker();
-    // $('#data_edit').dataTable();
 
     $("#id_filter_category").multiselect({checkAllText: "Označ vše", uncheckAllText: "Odznač vše", noneSelectedText: "Kategorie", show: ["slide", 100], 
         position: {
@@ -58,27 +56,7 @@ $(document).ready(function() {
         $("#filter_form").submit();
     });
 
-    // $("#hide_processed").bind("click", function(){
-    //     var state = $(this).attr("data-state");
-    //     if(state == "on"){
-    //         $(".processed").hide("fast");
-    //         $(this).attr("data-state", "off");
-    //         $(this).text("Ukaž zpracované");
-    //     }
-    //     else{
-    //         $(".processed").show("fast");
-    //         $(this).attr("data-state", "on");
-    //         $(this).text("Schovej zpracované");
-    //     }
-    // });
-
-
     $('.resized textarea').autosize();
-
-    // $(".changeable").change(function(){
-    //     $(".active").attr("class", "inactive");
-    //     $("#next_page.active").unbind("click");
-    // });
 
 });
 
@@ -106,6 +84,8 @@ function set_original_filter_values(){
         $("#id_hide_processed").attr("checked", "true");
     }
 
+    var graph = $(".graph").attr("data-original");
+    $("#id_graph").val(graph);
 
     
 }
@@ -175,11 +155,9 @@ function store_updated_rows(select_class, async){
             tr.addClass("neutral");
         }
         else if(option == "None"|option == 0){
-            tr.removeClass("neutral");
-            tr.removeClass("accepted");
-            tr.removeClass("denied");
+            tr.attr("class", "");
+            subject_category.val(0);
             subject_category.attr("disabled", "disabled");
-            // update_subject_category($("#id_subject_category"), 0)
         }
         else{
             subject_category.attr("disabled", "disabled");
@@ -194,31 +172,18 @@ function store_updated_rows(select_class, async){
         var tr = current_select.parent("td").parent("tr");
         
         if(option == 1|option == 2){
-            // tr.removeClass("neutral");
-            // tr.removeClass("denied");
-            // tr.addClass("accepted");
             tr.attr("class", "processed accepted");
         }
         else if(option == 11){
-            // tr.removeClass("neutral");
-            // tr.removeClass("denied");
-            // tr.addClass("psh_descriptor");
             tr.attr("class", "processed psh_descriptor");
         }
         else if(option == 12){
-            // tr.removeClass("neutral");
-            // tr.removeClass("denied");
-            // tr.addClass("psh_nondescriptor");
             tr.attr("class", "processed psh_nondescriptor");
         }
         else if(option == "None"|option == 0){
-            // tr.addClass("neutral");
             tr.attr("class", "neutral");
         }
         else{
-            // tr.removeClass("neutral");
-            // tr.removeClass("accepted");
-            // tr.addClass("denied");
             tr.attr("class", "processed denied");
         }
     }
