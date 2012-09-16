@@ -68,7 +68,7 @@ def data_edit(request):
         terms = terms[page_interval*filters["page"]:]
     else:
         terms = terms[page_interval*filters["page"]:page_interval*filters["page"]+page_interval]
-    
+
     return render_to_response("data_edit.html", {'terms': terms, "edit_form": edit_form, "filter_form": filter_form, "filters":filters, "next": next, "previous":previous, "graph_data": graph_data})
 
 def filter_data(terms, filters, interval):
@@ -173,8 +173,10 @@ def get_graph_data(terms, filters):
 
     data = {}
     
+    print keys
     for k in keys:
-        data[keys2label[k]] = 0
+        if k:
+            data[keys2label[k]] = 0
 
     for t in terms:
         data[keys2label[t[key]]] += 1
