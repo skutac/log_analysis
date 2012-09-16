@@ -2,6 +2,9 @@
 
 {% block content %}
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="http://canvg.googlecode.com/svn/trunk/rgbcolor.js"></script> 
+<script type="text/javascript" src="http://canvg.googlecode.com/svn/trunk/canvg.js"></script> 
+
 {% if filters.graph %}
 <script type="text/javascript">
 
@@ -9,17 +12,18 @@ google.load("visualization", "1", {packages:["corechart"]});
       google.setOnLoadCallback(drawChart);
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
-        	{% for item in graph_data %}
+        	{% for item in graph_data.data %}
         		["{{ item.0 }}", {{ item.1 }}],
         	{% endfor %}
         	]);
         var options = {
-          title: '{{ filters.date_from }} - {{ filters.date_to }}',
+          title: '{{ graph_data.date_from }} - {{ graph_data.date_to }},   vyhledávání: {{ graph_data.count }} ',
           height: "600",
           is3D: true,
           pieSliceText: "percentage",
-          backgroundColor: "#EBE8E9",
+          backgroundColor: "#FFFFFF",
           chartArea:{left:"auto",top:"auto",width:"80%",height:"80%"}
+          // chartArea:{left:"50",top:"50", right: "50", bottom:"50", width:"80%",height:"80%"}
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('graph'));
@@ -64,7 +68,12 @@ google.load("visualization", "1", {packages:["corechart"]});
 	</tr>
 </table>
 
+{% if filters.graph %}
+<hr />
 <div id="graph"></div>
+<div class="button" id="export_graph">Export grafu</div>
+<hr />
+{% endif %}
 
 <div class="pagination"><span class="{{ previous }}" id="previous_page">&lt; předchozí</span> - <span class="{{ next }}" id="next_page"> další &gt;</span></div>
 

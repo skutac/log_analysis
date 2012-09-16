@@ -58,7 +58,31 @@ $(document).ready(function() {
 
     $('.resized textarea').autosize();
 
+    $("#export_graph").click(function(){
+        export_graph_as_png();
+    });
+
 });
+
+function export_graph_as_png(){
+    var chartArea = document.getElementById('graph').getElementsByTagName('iframe')[0].
+    contentDocument.getElementById('chartArea');
+    var svg = chartArea.innerHTML;
+    
+    var canvas = document.createElement('canvas');
+    canvas.setAttribute('width', chartArea.offsetWidth);
+    canvas.setAttribute('height', chartArea.offsetHeight);
+    canvas.setAttribute(
+      'style',
+      'position: absolute; ' +
+      'top: ' + (-chartArea.offsetHeight * 2) + 'px;' +
+      'left: ' + (-chartArea.offsetWidth * 2) + 'px;');
+    $("body").append(canvas);
+
+    canvg(canvas, svg);
+    var imgData = canvas.toDataURL("image/png");
+    window.location = imgData.replace("image/png", "image/octet-stream");
+}
 
 function set_original_filter_values(){    
     var categories = $("#filter_category").attr("data-original").split(";");

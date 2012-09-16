@@ -68,7 +68,7 @@ def data_edit(request):
         terms = terms[page_interval*filters["page"]:]
     else:
         terms = terms[page_interval*filters["page"]:page_interval*filters["page"]+page_interval]
-    print filters
+    
     return render_to_response("data_edit.html", {'terms': terms, "edit_form": edit_form, "filter_form": filter_form, "filters":filters, "next": next, "previous":previous, "graph_data": graph_data})
 
 def filter_data(terms, filters, interval):
@@ -139,6 +139,7 @@ def get_pagination(count, interval, page):
     return next, previous
 
 def get_graph_data(terms, filters):
+    graph_data = {}
     graph_id = filters["graph"]
     terms = [t for t in terms if t["processed"]]
 
@@ -162,9 +163,6 @@ def get_graph_data(terms, filters):
             keys2label[c["subjectcategoryid"]] = c["subjectcategory"]
 
     elif graph_id == 3:
-        pass
-
-    elif graph_id == 4:
         terms = [t for t in terms if t["category_id"] == 1]
         key = "acquisition"
         keys = set([t[key] for t in terms])
@@ -182,9 +180,26 @@ def get_graph_data(terms, filters):
         data[keys2label[t[key]]] += 1
 
     data = [[d, data[d]] for d in data.keys()]
-    data.insert(0, ["Kategorie", 0])
+    data.insert(0, ["", 0])
 
-    return data
+    graph_data["data"] = data
+
+    date = list(query_to_dicts("""SELECT date FROM log_current ORDER BY date"""))
+
+    if not filters["date_to"]:
+        graph_data["date_to"] = "/".join([str(date[-1]["date"].month), str(date[-1]["date"].year)])
+    else:
+        graph_data["date_to"] = filters["date_to"]
+
+    if not filters["date_from"]:
+        graph_data["date_from"] = "/".join([str(date[0]["date"].month), str(date[0]["date"].year)])
+    else:
+        graph_data["date_from"] = filters["date_from"]
+
+    graph_data["count"] = len(terms)
+
+
+    return graph_data
 
 
 

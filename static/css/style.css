@@ -171,6 +171,10 @@ border: solid #dedede 1px;
 /*-moz-border-radius: 10px;*/
 }
 
+#id_note{
+	width: 90%;
+}
+
 #data_edit select{
 background-color:#f5f5f5;
 border:1px solid #dedede;
@@ -306,10 +310,22 @@ padding:5px 10px 6px 7px;
 }
 
 #graph{
-	width: 80%;
+	width: 800px;
 	margin-left: auto;
 	margin-right: auto;
-	border-radius: 10px;
-	-moz-border-radius: 10px;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
 	margin-top: 20px;
+}
+
+#export_graph{
+	width: 50%;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 10px;
+}
+
+hr{
+	margin-top: 20px;
+	margin-bottom: 20px;
 }
