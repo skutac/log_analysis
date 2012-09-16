@@ -173,10 +173,9 @@ def get_graph_data(terms, filters):
 
     data = {}
     
-    print keys
+    keys = [k for k in keys if k]
     for k in keys:
-        if k:
-            data[keys2label[k]] = 0
+        data[keys2label[k]] = 0
 
     for t in terms:
         data[keys2label[t[key]]] += 1
