@@ -178,7 +178,8 @@ def get_graph_data(terms, filters):
             data[keys2label[k]] = 0
 
     for t in terms:
-        data[keys2label[t[key]]] += 1
+        if t[key] != None:
+            data[keys2label[t[key]]] += 1
 
     data = [[d, data[d]] for d in data.keys()]
     data.insert(0, ["", 0])
@@ -198,7 +199,7 @@ def get_graph_data(terms, filters):
         graph_data["date_from"] = filters["date_from"]
 
     graph_data["count"] = len(terms)
-    
+
     return graph_data
 
 
