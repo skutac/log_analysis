@@ -123,7 +123,7 @@ border-radius: 5px;
 padding: 5px;
 }*/
 
-#data_edit, #data_filter{
+#data_edit{
 margin-top: 20px;
 vertical-align: middle;
 width: 90%;
@@ -132,6 +132,17 @@ margin-right: auto;
 /*display: block;*/
 border-collapse: collapse;
 max-width: 1400px;
+}
+
+#data_filter{
+margin-top: 20px;
+vertical-align: middle;
+width: 80%;
+margin-left: auto;
+margin-right: auto;
+/*display: block;*/
+border-collapse: collapse;
+max-width: 1200px;
 }
 
 
@@ -143,10 +154,6 @@ padding-left: 10px;
 
 #data_filter td{
 	text-align: center;
-}
-
-#data_filter{
-	margin-top: 20px;
 }
 
 #data_edit tr{
@@ -169,6 +176,10 @@ height: 20px;
 border: solid #dedede 1px;
 /*border-radius: 10px;*/
 /*-moz-border-radius: 10px;*/
+}
+
+#date_from, #date_to{
+	width: 50px;
 }
 
 #id_note{
@@ -291,7 +302,7 @@ padding:5px 10px 6px 7px;
 	display: block;
 	text-align: center;
 	margin-top: 20px;
-	font-size: 14px;
+	font-size: 20px;
 	text-decoration: none;
 }
 

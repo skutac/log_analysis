@@ -75,7 +75,7 @@ google.load("visualization", "1", {packages:["corechart"]});
 <hr />
 {% endif %}
 
-<div class="pagination"><span class="{{ previous }}" id="previous_page">&lt; předchozí</span> - <span class="{{ next }}" id="next_page"> další &gt;</span></div>
+<div class="pagination"><span class="{{ previous }}" id="previous_page">&lt;  </span> {{ filters.page|add:"1" }} <span class="{{ next }}" id="next_page">  &gt;</span></div>
 
 <table id="data_edit">
 <thead>
@@ -113,6 +113,6 @@ google.load("visualization", "1", {packages:["corechart"]});
 </tr>
 {% endfor %}
 </table>
-<div class="pagination"><span class="{{ previous }}" id="previous_page">&lt; předchozí</span> - <span class="{{ next }}" id="next_page"> další &gt;</span>
+<div class="pagination"><span class="{{ previous }}" id="previous_page">&lt;  </span> {{ filters.page|add:"1" }} <span class="{{ next }}" id="next_page">  &gt;</span></div>
 <div class="home_link"><a href='index'>Zpět na hlavní stránku</a></div>
 {% endblock %}
