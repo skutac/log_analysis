@@ -29,6 +29,8 @@ def save_to_current(term, count):
         attrs["category"] = Category.objects.get(categoryid=4)
         attrs["subjectcategory"] = SubjectCategory.objects.get(subjectcategoryid=12)
         attrs["processed"] = 1
+    else:
+        return
     
     try:
         obj = Current.objects.get(subject=term)

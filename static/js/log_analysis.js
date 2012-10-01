@@ -65,9 +65,8 @@ $(document).ready(function() {
 });
 
 function export_graph_as_png(){
-    var chartArea = document.getElementById('graph').getElementsByTagName('iframe')[0].
-    contentDocument.getElementById('chartArea');
-    var svg = chartArea.innerHTML;
+    var chartArea = $("#graph").find("svg").parent();
+    var svg = chartArea.html();
     
     var canvas = document.createElement('canvas');
     canvas.setAttribute('width', chartArea.offsetWidth);
