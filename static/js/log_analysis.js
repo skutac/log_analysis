@@ -58,7 +58,7 @@ $(document).ready(function() {
 
     $('.resized textarea').autosize();
 
-    $("#export_graph").click(function(){
+    $("#export_graph_button").click(function(){
         export_graph_as_png();
     });
 
@@ -80,7 +80,10 @@ function export_graph_as_png(){
 
     canvg(canvas, svg);
     var imgData = canvas.toDataURL("image/png");
-    window.location = imgData.replace("image/png", "image/octet-stream");
+    imgData = imgData.replace("image/png", "image/octet-stream");
+    $("#graph_input").val(imgData);
+    $("#graph_form").submit();
+
 }
 
 function set_original_filter_values(){    

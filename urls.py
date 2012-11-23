@@ -27,6 +27,7 @@ urlpatterns = patterns('',
     # (r'^data_view$', 'views.data_view'),
     (r'^data_edit$', 'views.data_edit'),
     (r'^graph_export$', 'views.data_edit'),
+    (r'^export_graph_as_png$', 'views.export_graph_as_png'),
     (r'^store_updated_row$', 'handler.store_updated_row'),
     (r'^.*$', 'views.index'),
 )

@@ -71,7 +71,11 @@ google.load("visualization", "1", {packages:["corechart"]});
 {% if filters.graph %}
 <hr />
 <div id="graph"></div>
-<div class="button" id="export_graph">Export grafu</div>
+<form action="export_graph_as_png" method="post" id="graph_form">
+<input id="graph_input" type="hidden" name="graph" value="a" />
+<input type="submit" value="Export grafu" class="button" id="export_graph_button">
+</form>
+<!-- <div class="button" id="export_graph">Export grafu</div> -->
 <hr />
 {% endif %}
 

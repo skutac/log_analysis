@@ -202,5 +202,9 @@ def get_graph_data(terms, filters):
 
     return graph_data
 
-
-
+def export_graph_as_png(request):
+    graph = request.POST["graph"].split(",")[-1]
+    graph = graph.decode("base64")
+    response = HttpResponse(graph, content_type='image/png')
+    response['Content-Disposition'] = 'attachment; filename="graph.png"'
+    return response
