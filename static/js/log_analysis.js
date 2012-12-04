@@ -62,6 +62,8 @@ $(document).ready(function() {
         export_graph_as_png();
     });
 
+
+
 });
 
 function export_graph_as_png(){

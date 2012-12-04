@@ -39,7 +39,7 @@ google.load("visualization", "1", {packages:["corechart"]});
 		<tr>
 			<th>Datum - od:</th>
 			<th>Datum - do:</th>
-			<!-- <th>Termín obsahuje:</th> -->
+			<th>Termín obsahuje:</th>
 			<th></th>
 			<th></th>
 			<th>Akvizice:</th>
@@ -54,7 +54,7 @@ google.load("visualization", "1", {packages:["corechart"]});
 		<form action="data_edit" method="get" id="filter_form">
 			<td><input type="text" value="{{ filters.date_from }}" name="date_from" id="date_from" class="changeable"></td>
 			<td><input type="text" value="{{ filters.date_to }}" name="date_to" id="date_to"></td>
-			<!-- <td><input type="text" value="{{ filters.term_search }}" name="term_search" id="term_search"></td> -->
+			<td><input type="text" value="{{ filters.term_search }}" name="term_search" id="term_search"></td>
 			<td id="filter_category" data-original="{{filters.filter_category}}">{{ filter_form.filter_category }}</td>
 			<td id="filter_subject_category" data-original="{{filters.filter_subject_category}}">{{ filter_form.filter_subject_category }}</td>
 			<td class="acquisition" data-original="{{filters.acquisition}}">{{ edit_form.acquisition }}</td>
@@ -79,7 +79,7 @@ google.load("visualization", "1", {packages:["corechart"]});
 <hr />
 {% endif %}
 
-<div class="pagination"><span class="{{ previous }}" id="previous_page">&lt;  </span> {{ filters.page|add:"1" }} <span class="{{ next }}" id="next_page">  &gt;</span></div>
+<div class="pagination"><span class="{{ previous }}" id="previous_page">&lt;  </span> {{ filters.page|add:"1" }} z {{page_count}}<span class="{{ next }}" id="next_page">  &gt;</span></div>
 
 <table id="data_edit">
 <thead>
@@ -117,6 +117,9 @@ google.load("visualization", "1", {packages:["corechart"]});
 </tr>
 {% endfor %}
 </table>
-<div class="pagination"><span class="{{ previous }}" id="previous_page">&lt;  </span> {{ filters.page|add:"1" }} <span class="{{ next }}" id="next_page">  &gt;</span></div>
+<div class="pagination"><span class="{{ previous }}" id="previous_page">&lt;  </span> {{ filters.page|add:"1" }} z {{page_count}}<span class="{{ next }}" id="next_page">  &gt;</span></div>
+<!-- {% if filters.acquisition %}
+<a href="acquisition_export">Export akvizice</a>
+{% endif %} -->
 <div class="home_link"><a href='index'>Zpět na hlavní stránku</a></div>
 {% endblock %}

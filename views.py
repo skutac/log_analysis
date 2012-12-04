@@ -1,9 +1,6 @@
 #coding: utf-8
 import os, json
 
-from itertools import *
-
-from django.db import connection
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
@@ -12,22 +9,8 @@ from django.conf import settings
 
 from log_analysis.log.models import Current, Category, SubjectCategory
 from log_analysis.forms import EditForm, FilterForm
+from log_analysis.handler import query_to_dicts
 
-def query_to_dicts(query_string, *query_args):
-    """Run a simple query and produce a generator
-    that returns the results as a bunch of dictionaries
-    with keys for the column values selected.
-    """
-    cursor = connection.cursor()
-    cursor.execute(query_string, query_args)
-    col_names = [desc[0] for desc in cursor.description]
-    while True:
-        row = cursor.fetchone()
-        if row is None:
-            break
-        row_dict = dict(izip(col_names, row))
-        yield row_dict
-    return
 
 class UploadFileForm(forms.Form):
     """Model of form for file upload"""
@@ -41,6 +24,9 @@ def index(request):
     """Returns main site for log and text file analysis"""
     form = UploadFileForm()
     return render_to_response("index.html", {"form":form})
+
+def get_acquisition_export(request):
+    pass
 
 def data_edit(request):
     """Returns view on current data ordered by count"""
@@ -57,7 +43,7 @@ def data_edit(request):
 
     page_interval = 150
     terms, filters = filter_data(terms, dict(request.GET), page_interval)
-    next, previous = get_pagination(len(terms), page_interval, filters["page"])
+    next, previous, page_count = get_pagination(len(terms), page_interval, filters["page"])
 
     graph_data = False
     if "graph" in filters.keys():
@@ -69,26 +55,37 @@ def data_edit(request):
     else:
         terms = terms[page_interval*filters["page"]:page_interval*filters["page"]+page_interval]
 
-    return render_to_response("data_edit.html", {'terms': terms, "edit_form": edit_form, "filter_form": filter_form, "filters":filters, "next": next, "previous":previous, "graph_data": graph_data})
+    return render_to_response("data_edit.html", {'terms': terms, "edit_form": edit_form, "filter_form": filter_form, "filters":filters, "next": next, "previous":previous, "page_count":page_count, "graph_data": graph_data})
 
 def filter_data(terms, filters, interval):
+    no_subject_category = True
+    only_subject = False
     for f in filters:
         if filters[f]:
-            # if f == "term_search":
-            #     terms = [t for t in terms if filters[f] in t["subject"]]
+            if f == "term_search":
+                filters[f] = filters[f][0]
+                terms = [t for t in terms if filters[f] in t["subject"]]
 
             # if f == "note":
             #     terms = [t for t in terms if filters[f] in t["note"]]
 
             if f == "filter_category" and filters[f][0] != "0":
                 filters[f] = [int(num) for num in filters[f]]
-                terms = [t for t in terms if t["category_id"] in [int(num) for num in filters[f]]]
+                category_ids = [int(num) for num in filters[f]]
+                terms = [t for t in terms if t["category_id"] in category_ids]
                 filters[f] = ";".join([str(num) for num in filters[f]])
+
+                if len(category_ids) == 1 and category_ids[0] == 4:
+                    only_subject = True
+                else:
+                    only_subject = False
 
             elif f == "filter_subject_category" and filters[f][0] != "0":
                 filters[f] = [int(num) for num in filters[f]]
                 terms = [t for t in terms if t["subjectcategory_id"] in filters[f]]
                 filters[f] = ";".join([str(num) for num in filters[f]])
+                no_subject_category = False
+
 
             elif f == "date_from":
                 filters[f] = filters[f][0]
@@ -113,7 +110,8 @@ def filter_data(terms, filters, interval):
             elif f == "graph":
                 filters[f] = int(filters[f][0])
 
-
+    if no_subject_category and only_subject:
+        terms = [t for t in terms if not(t["subjectcategory_id"])]
 
     if "page" in filters.keys():
         filters["page"] = int(filters["page"][0])
@@ -136,7 +134,7 @@ def get_pagination(count, interval, page):
         if count <= interval*(page+1):
             next = "inactive"
 
-    return next, previous
+    return next, previous, page_count+1
 
 def get_graph_data(terms, filters):
     graph_data = {}

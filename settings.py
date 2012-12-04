@@ -96,5 +96,4 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'log_analysis.log',
     'log_analysis.psh_db',
-    'log_analysis.upload_data',
 )
