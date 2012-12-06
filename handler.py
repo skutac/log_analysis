@@ -10,7 +10,7 @@ from django.shortcuts import render_to_response
 from django.conf import settings
 
 from log_analysis.psh_db.models import Hesla, Ekvivalence, Varianta
-from log_analysis.log.models import Current, Category, SubjectCategory
+from log_analysis.log.models import Current, Category, SubjectCategory, SubjectCount
 
 def query_to_dicts(query_string, *query_args):
     """Run a simple query and produce a generator
@@ -98,6 +98,9 @@ def save_to_current(term, count):
         obj = Current(**attrs)
 
     obj.save()
+
+    obj_count = SubjectCount(subject=obj, count=attrs["count"])
+    obj_count.save()
     return
 
 def store_subjects_from_GAExport(export):
