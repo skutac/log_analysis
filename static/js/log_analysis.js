@@ -62,6 +62,15 @@ $(document).ready(function() {
         export_graph_as_png();
     });
 
+    $("#acquisition_export_button").click(function(){
+        var acquisition_export = $("#acquisition_export");
+        if(acquisition_export.css("display") == "none"){
+            $("#acquisition_export").fadeIn();
+        }
+        else{
+            $("#acquisition_export").fadeOut();
+        }
+    });
 
 
 });

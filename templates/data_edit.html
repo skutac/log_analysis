@@ -118,8 +118,15 @@ google.load("visualization", "1", {packages:["corechart"]});
 {% endfor %}
 </table>
 <div class="pagination"><span class="{{ previous }}" id="previous_page">&lt;  </span> {{ filters.page|add:"1" }} z {{page_count}}<span class="{{ next }}" id="next_page">  &gt;</span></div>
-<!-- {% if filters.acquisition %}
-<a href="acquisition_export">Export akvizice</a>
-{% endif %} -->
+
+{% if filters.acquisition %}
+<div id="acquisition_export_button" class="button">Export akvizice</div>
+<div id="acquisition_export">
+{% for term in terms %}
+<div><a href="{{ term.note }}">{{ term.subject }}</a>, {{ term.count }}, {{ term.note }}</div>
+{% endfor %}
+</div>
+
+{% endif %}
 <div class="home_link"><a href='index'>Zpět na hlavní stránku</a></div>
 {% endblock %}

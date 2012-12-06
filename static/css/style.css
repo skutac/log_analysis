@@ -303,3 +303,20 @@ hr{
 	margin-top: 20px;
 	margin-bottom: 20px;
 }
+
+#acquisition_export_button{
+	width: 30%;
+	margin-top: 20px;
+	margin-left: auto;	
+	margin-right: auto;
+}
+
+#acquisition_export{
+	width: 80%;
+	margin-top: 20px;
+	display: none;
+}
+
+#acquisition_export div{
+	margin-top: 5px;
+}
