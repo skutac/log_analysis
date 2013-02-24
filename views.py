@@ -31,48 +31,58 @@ def get_acquisition_export(request):
 def data_edit(request):
     """Returns view on current data ordered by count"""
     #terms = Current.objects.filter(count__gt = 6).order_by("-count")
-    print request.GET
     edit_form = EditForm()
     filter_form = FilterForm()
-    terms = query_to_dicts("""SELECT *  FROM log_current ORDER BY count DESC""")
-    terms = list(terms)
+    subjects = query_to_dicts("""SELECT log_subjects.subject,
+                                    acquisition,
+                                    processed,
+                                    note,
+                                    category_id,
+                                    subjectcategory_id,
+                                    count,
+                                    date
+                            FROM log_subjects
+                            LEFT JOIN log_category on log_category.categoryid = log_subjects.category_id
+                            LEFT JOIN log_subjectcategory on log_subjectcategory.subjectcategoryid = log_subjects.subjectcategory_id
+                            LEFT JOIN log_subjectcount on log_subjectcount.subject = log_subjects.subject""")
+    subjects = list(subjects)
 
-    for i in xrange(len(terms)):
-        terms[i]["subject"] = terms[i]["subject"].decode("utf8")
-        terms[i]["note"] = terms[i]["note"].decode("utf8")
+    for i in xrange(len(subjects)):
+        subjects[i]["subject"] = subjects[i]["subject"].decode("utf8")
+        subjects[i]["note"] = subjects[i]["note"].decode("utf8")
 
     page_interval = 150
-    terms, filters = filter_data(terms, dict(request.GET), page_interval)
-    next, previous, page_count = get_pagination(len(terms), page_interval, filters["page"])
+    subjects, filters = filter_data(subjects, dict(request.GET), page_interval)
+    subjects = merge_subjects(subjects)
+    next, previous, page_count = get_pagination(len(subjects), page_interval, filters["page"])
 
     graph_data = False
     if "graph" in filters.keys():
-        graph_data = get_graph_data(terms, filters)
-
+        graph_data = get_graph_data(subjects, filters)
 
     if next == "inactive":
-        terms = terms[page_interval*filters["page"]:]
+        subjects = subjects[page_interval*filters["page"]:]
     else:
-        terms = terms[page_interval*filters["page"]:page_interval*filters["page"]+page_interval]
+        subjects = subjects[page_interval*filters["page"]:page_interval*filters["page"]+page_interval]
 
-    return render_to_response("data_edit.html", {'terms': terms, "edit_form": edit_form, "filter_form": filter_form, "filters":filters, "next": next, "previous":previous, "page_count":page_count, "graph_data": graph_data})
+    return render_to_response("data_edit.html", {'subjects': subjects, "edit_form": edit_form, "filter_form": filter_form, "filters":filters, "next": next, "previous":previous, "page_count":page_count, "graph_data": graph_data})
 
-def filter_data(terms, filters, interval):
+def filter_data(subjects, filters, interval):
     no_subject_category = True
     only_subject = False
     for f in filters:
         if filters[f]:
             if f == "term_search":
                 filters[f] = filters[f][0]
-                terms = [t for t in terms if filters[f] in t["subject"]]
+                subjects = [t for t in subjects if filters[f] in t["subject"]]
 
             # if f == "note":
-            #     terms = [t for t in terms if filters[f] in t["note"]]
+            #     subjects = [t for t in subjects if filters[f] in t["note"]]
 
             if f == "filter_category" and filters[f][0] != "0":
                 filters[f] = [int(num) for num in filters[f]]
                 category_ids = [int(num) for num in filters[f]]
-                terms = [t for t in terms if t["category_id"] in category_ids]
+                subjects = [t for t in subjects if t["category_id"] in category_ids]
                 filters[f] = ";".join([str(num) for num in filters[f]])
 
                 if len(category_ids) == 1 and category_ids[0] == 4:
@@ -82,7 +92,7 @@ def filter_data(terms, filters, interval):
 
             elif f == "filter_subject_category" and filters[f][0] != "0":
                 filters[f] = [int(num) for num in filters[f]]
-                terms = [t for t in terms if t["subjectcategory_id"] in filters[f]]
+                subjects = [t for t in subjects if t["subjectcategory_id"] in filters[f]]
                 filters[f] = ";".join([str(num) for num in filters[f]])
                 no_subject_category = False
 
@@ -91,34 +101,34 @@ def filter_data(terms, filters, interval):
                 filters[f] = filters[f][0]
                 if filters[f]:
                     month, year = int(filters[f].split("/")[0]), int(filters[f].split("/")[1])
-                    terms = [t for t in terms if t["date"].month>=month and t["date"].year>=year]
+                    subjects = [t for t in subjects if t["date"].month>=month and t["date"].year>=year]
             
             elif f == "date_to":
                 filters[f] = filters[f][0]
                 if filters[f]:
                     month, year = int(filters[f].split("/")[0]), int(filters[f].split("/")[1])
-                    terms = [t for t in terms if t["date"].month<=month and t["date"].year<=year]
+                    subjects = [t for t in subjects if t["date"].month<=month and t["date"].year<=year]
 
             elif f == "acquisition":
                 filters[f] = "1"
-                terms = [t for t in terms if t["acquisition"]]
+                subjects = [t for t in subjects if t["acquisition"]]
 
             elif f == "hide_processed":
                 filters[f] = filters[f][0]
-                terms = [t for t in terms if not t["processed"]]
+                subjects = [t for t in subjects if not t["processed"]]
 
             elif f == "graph":
                 filters[f] = int(filters[f][0])
 
     if no_subject_category and only_subject:
-        terms = [t for t in terms if not(t["subjectcategory_id"])]
+        subjects = [t for t in subjects if not(t["subjectcategory_id"])]
 
     if "page" in filters.keys():
         filters["page"] = int(filters["page"][0])
     else:
         filters["page"] = 0
 
-    return terms, filters
+    return subjects, filters
 
 def get_pagination(count, interval, page):
     page_count = count/interval
@@ -136,14 +146,14 @@ def get_pagination(count, interval, page):
 
     return next, previous, page_count+1
 
-def get_graph_data(terms, filters):
+def get_graph_data(subjects, filters):
     graph_data = {}
     graph_id = filters["graph"]
-    terms = [t for t in terms if t["processed"]]
+    subjects = [t for t in subjects if t["processed"]]
 
     if graph_id == 1:
         key = "category_id"
-        keys = set([t[key] for t in terms])
+        keys = set([t[key] for t in subjects])
         categories = list(query_to_dicts("""SELECT * FROM log_category"""))
 
         keys2label = {}
@@ -151,9 +161,9 @@ def get_graph_data(terms, filters):
             keys2label[c["categoryid"]] = c["category"]
 
     elif graph_id == 2:
-        terms = [t for t in terms if t["category_id"] == 4]
+        subjects = [t for t in subjects if t["category_id"] == 4]
         key = "subjectcategory_id"
-        keys = set([t[key] for t in terms])
+        keys = set([t[key] for t in subjects])
         subject_categories = list(query_to_dicts("""SELECT * FROM log_subjectcategory"""))
         keys2label = {}
 
@@ -161,9 +171,9 @@ def get_graph_data(terms, filters):
             keys2label[c["subjectcategoryid"]] = c["subjectcategory"]
 
     elif graph_id == 3:
-        terms = [t for t in terms if t["category_id"] == 1]
+        subjects = [t for t in subjects if t["category_id"] == 1]
         key = "acquisition"
-        keys = set([t[key] for t in terms])
+        keys = set([t[key] for t in subjects])
         keys2label = {0:"fond", 1:"akvizice"}
 
     else:
@@ -175,7 +185,7 @@ def get_graph_data(terms, filters):
         if k != None:
             data[keys2label[k]] = 0
 
-    for t in terms:
+    for t in subjects:
         if t[key] != None:
             data[keys2label[t[key]]] += 1
 
@@ -196,7 +206,7 @@ def get_graph_data(terms, filters):
     else:
         graph_data["date_from"] = filters["date_from"]
 
-    graph_data["count"] = len(terms)
+    graph_data["count"] = len(subjects)
 
     return graph_data
 
@@ -206,3 +216,18 @@ def export_graph_as_png(request):
     response = HttpResponse(graph, content_type='image/png')
     response['Content-Disposition'] = 'attachment; filename="graph.png"'
     return response
+
+def merge_subjects(subjects):
+    subject2subject = {}
+
+    for s in subjects:
+        if s["subject"] in subject2subject:
+            if s["subject"] == "java":
+                print s
+            subject2subject[s["subject"]]["count"]+=s["count"]
+        else:
+            subject2subject[s["subject"]] = s
+
+    subjects = [subject2subject[s] for s in subject2subject]
+    subjects.sort(key = lambda x: x["count"], reverse=True)
+    return subjects

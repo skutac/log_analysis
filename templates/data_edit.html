@@ -94,22 +94,22 @@ google.load("visualization", "1", {packages:["corechart"]});
 </tr>
 </thead>
 
-{% for term in terms %}
+{% for subject in subjects %}
 
-{% if term.processed %}
+{% if subject.processed %}
 <tr class="processed">
 {% else %}
 <tr>
 {% endif %}
 <form>
-<td class="date">{{ term.date|date:"m/Y" }}</td>
-<td class="subject">{{ term.subject }}</td>
-<td class="count">{{ term.count }}</td>
-<td class="category" data-original="{{term.category_id}}">{{ edit_form.category }}</td>
-<td class="disabled subject_category" data-original="{{term.subjectcategory_id}}">{{ edit_form.subject_category }}</td>
-<td class="acquisition" data-original="{{term.acquisition}}">{{ edit_form.acquisition }}</td>
-{% if term.note %}
-<td class="note resized" data-original="{{term.note}}">{{ edit_form.note }}</td>
+<td class="date">{{ subject.date|date:"m/Y" }}</td>
+<td class="subject">{{ subject.subject }}</td>
+<td class="count">{{ subject.count }}</td>
+<td class="category" data-original="{{subject.category_id}}">{{ edit_form.category }}</td>
+<td class="disabled subject_category" data-original="{{subject.subjectcategory_id}}">{{ edit_form.subject_category }}</td>
+<td class="acquisition" data-original="{{subject.acquisition}}">{{ edit_form.acquisition }}</td>
+{% if subject.note %}
+<td class="note resized" data-original="{{subject.note}}">{{ edit_form.note }}</td>
 {% else %}
 <td class="note" data-original="">{{ edit_form.note }}</td>
 {% endif %}
@@ -122,8 +122,8 @@ google.load("visualization", "1", {packages:["corechart"]});
 {% if filters.acquisition %}
 <div id="acquisition_export_button" class="button">Export akvizice</div>
 <div id="acquisition_export">
-{% for term in terms %}
-<div><a href="{{ term.note }}">{{ term.subject }}</a>, {{ term.count }}, {{ term.note }}</div>
+{% for subject in subjects %}
+<div><a href="{{ subject.note }}">{{ subject.subject }}</a>, {{ subject.count }}, {{ subject.note }}</div>
 {% endfor %}
 </div>
 

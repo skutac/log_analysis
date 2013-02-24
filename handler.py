@@ -10,7 +10,7 @@ from django.shortcuts import render_to_response
 from django.conf import settings
 
 from log_analysis.psh_db.models import Hesla, Ekvivalence, Varianta
-from log_analysis.log.models import Current, Category, SubjectCategory, SubjectCount
+from log_analysis.log.models import Current, Category, SubjectCategory, SubjectCount, Subjects
 
 def query_to_dicts(query_string, *query_args):
     """Run a simple query and produce a generator
@@ -61,13 +61,13 @@ def store_updated_row(request):
         else:
             subject_category = None
 
-        current = Current.objects.get(subject=subject)
-        current.category = category
-        current.subjectcategory = subject_category
-        current.processed = processed
-        current.acquisition = acquisition
-        current.note = note
-        current.save()
+        subject = Subjects.objects.get(subject=subject)
+        subject.category = category
+        subject.subjectcategory = subject_category
+        subject.processed = processed
+        subject.acquisition = acquisition
+        subject.note = note
+        subject.save()
         return HttpResponse(True)
     except Exception, e:
         print str(e)
@@ -79,35 +79,32 @@ def store_GAExport(request):
     else:
         return render_to_response("error.html", {'error': 'Nebyl vybrán žádný soubor.'})
 
-def save_to_current(term, count):
+def save_subject(term, count):
     """Updates database with current subject:count pair. Creates it if not already there."""
-    attrs = {"subject":term, "count":count}
+    subject = {"subject":term}
     if term in hesla or term in ekvivalence:
-        attrs["category"] = Category.objects.get(categoryid=4)
-        attrs["subjectcategory"] = SubjectCategory.objects.get(subjectcategoryid=11)
-        attrs["processed"] = 1
+        subject["category"] = Category.objects.get(categoryid=4)
+        subject["subjectcategory"] = SubjectCategory.objects.get(subjectcategoryid=11)
+        subject["processed"] = 1
     elif term in varianta:
-        attrs["category"] = Category.objects.get(categoryid=4)
-        attrs["subjectcategory"] = SubjectCategory.objects.get(subjectcategoryid=12)
-        attrs["processed"] = 1
+        subject["category"] = Category.objects.get(categoryid=4)
+        subject["subjectcategory"] = SubjectCategory.objects.get(subjectcategoryid=12)
+        subject["processed"] = 1
     
-    try:
-        obj = Current.objects.get(subject=term)
-        obj.count += int(count)
-    except Exception:
-        obj = Current(**attrs)
+    obj, created = Subjects.objects.get_or_create(**subject)
+    if created:
+        obj.save()
 
-    obj.save()
-
-    obj_count = SubjectCount(subject=obj, count=attrs["count"])
+    obj_count = SubjectCount(subject=obj, count=count)
     obj_count.save()
     return
 
 def store_subjects_from_GAExport(export):
     """Stores subjects from GA CSV export."""
-    old_count = Current.objects.count()
+    old_count = Subjects.objects.count()
     switch = False
     old = "**********"
+
     for line in export.readlines():
         if switch:
             try:
@@ -121,7 +118,7 @@ def store_subjects_from_GAExport(export):
                 if term == old:
                     switch = False
                 else:
-                    save_to_current(term, count)
+                    save_subject(term, count)
                     old = term
 
         elif "Vyhledávací dotaz," in line or "Search Term," in line:
@@ -129,6 +126,6 @@ def store_subjects_from_GAExport(export):
 
     export.close()
 
-    total_count = Current.objects.count()
+    total_count = Subjects.objects.count()
     new_count = total_count - old_count
     return u"Nově nahráno: %s (%s celkem)" %(new_count, total_count)
