@@ -7,7 +7,7 @@ from django.shortcuts import render_to_response
 from django import forms
 from django.conf import settings
 
-from log_analysis.log.models import Current, Category, SubjectCategory
+from log_analysis.log.models import Category, SubjectCategory
 from log_analysis.forms import EditForm, FilterForm
 from log_analysis.handler import query_to_dicts
 
@@ -194,7 +194,7 @@ def get_graph_data(subjects, filters):
 
     graph_data["data"] = data
 
-    date = list(query_to_dicts("""SELECT date FROM log_current ORDER BY date"""))
+    date = list(query_to_dicts("""SELECT date FROM log_subjectcount GROUP BY date ORDER BY date"""))
 
     if not filters["date_to"]:
         graph_data["date_to"] = "/".join([str(date[-1]["date"].month), str(date[-1]["date"].year)])

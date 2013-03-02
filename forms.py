@@ -1,7 +1,7 @@
 #coding: utf-8
 from django import forms
 
-from log.models import Current, Category, SubjectCategory
+from log.models import Category, SubjectCategory
 
 categories_list = ["-", "dílo", "osoba", "korporace", "předmět", "akce", "místo", "jiné"]
 subject_categories_list = ["-","deskriptor", "nedeskriptor", "podrobné", "obecné", "vícevýznamové", "produkt", "slang", "málo užívané", "profesní skupina", "obsaženo v PSH"]

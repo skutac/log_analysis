@@ -10,7 +10,7 @@ from django.shortcuts import render_to_response
 from django.conf import settings
 
 from log_analysis.psh_db.models import Hesla, Ekvivalence, Varianta
-from log_analysis.log.models import Current, Category, SubjectCategory, SubjectCount, Subjects
+from log_analysis.log.models import Category, SubjectCategory, SubjectCount, Subjects
 
 def query_to_dicts(query_string, *query_args):
     """Run a simple query and produce a generator
@@ -79,23 +79,28 @@ def store_GAExport(request):
     else:
         return render_to_response("error.html", {'error': 'Nebyl vybrán žádný soubor.'})
 
-def save_subject(term, count):
+def save_subject(term, count, date):
     """Updates database with current subject:count pair. Creates it if not already there."""
-    subject = {"subject":term}
+    subject = {"subject":term, "date": date}
     if term in hesla or term in ekvivalence:
         subject["category"] = Category.objects.get(categoryid=4)
         subject["subjectcategory"] = SubjectCategory.objects.get(subjectcategoryid=11)
-        subject["processed"] = 1
+
     elif term in varianta:
         subject["category"] = Category.objects.get(categoryid=4)
         subject["subjectcategory"] = SubjectCategory.objects.get(subjectcategoryid=12)
-        subject["processed"] = 1
-    
-    obj, created = Subjects.objects.get_or_create(**subject)
+
+    obj, created = Subjects.objects.get_or_create(subject=term)    
+
     if created:
+        if "processed" in subject:
+            obj.category = subject["category"]
+            obj.subjectcategory = subject["subjectcategory"]
+            obj.processed = 1
+
         obj.save()
 
-    obj_count = SubjectCount(subject=obj, count=count)
+    obj_count = SubjectCount(subject=obj, count=count, date=date)
     obj_count.save()
     return
 
@@ -103,6 +108,8 @@ def store_subjects_from_GAExport(export):
     """Stores subjects from GA CSV export."""
     old_count = Subjects.objects.count()
     switch = False
+    dates = []
+    terms = []
     old = "**********"
 
     for line in export.readlines():
@@ -118,13 +125,28 @@ def store_subjects_from_GAExport(export):
                 if term == old:
                     switch = False
                 else:
-                    save_subject(term, count)
+                    terms.append((term, count))
                     old = term
 
         elif "Vyhledávací dotaz," in line or "Search Term," in line:
             switch = True
 
+        line_split = line.split(",")
+        if len(line_split) == 2 and re.match("\d+.\d+.\d+", line_split[0]):
+            dates.append(line_split[0])
+
     export.close()
+
+    dates = list(set([".".join(d.split(".")[1:]) for d in dates]))
+    if len(dates) == 1:
+        date_split = dates[0].split(".")
+        year = "".join(["20", date_split[1]])
+        date = "-".join([year, date_split[0], "01"])
+    else:
+        return "Chyba: Export obsahuje termíny z více než jednoho měsíce."
+
+    for term in terms:
+        save_subject(term[0], term[1], date)
 
     total_count = Subjects.objects.count()
     new_count = total_count - old_count
