@@ -93,7 +93,7 @@ def save_subject(term, count, date):
     obj, created = Subjects.objects.get_or_create(subject=term)    
 
     if created:
-        if "processed" in subject:
+        if "category" in subject:
             obj.category = subject["category"]
             obj.subjectcategory = subject["subjectcategory"]
             obj.processed = 1

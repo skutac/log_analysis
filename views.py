@@ -101,13 +101,13 @@ def filter_data(subjects, filters, interval):
                 filters[f] = filters[f][0]
                 if filters[f]:
                     month, year = int(filters[f].split("/")[0]), int(filters[f].split("/")[1])
-                    subjects = [t for t in subjects if t["date"].month>=month and t["date"].year>=year]
+                    subjects = [t for t in subjects if t["date"] and t["date"].month>=month and t["date"].year>=year]
             
             elif f == "date_to":
                 filters[f] = filters[f][0]
                 if filters[f]:
                     month, year = int(filters[f].split("/")[0]), int(filters[f].split("/")[1])
-                    subjects = [t for t in subjects if t["date"].month<=month and t["date"].year<=year]
+                    subjects = [t for t in subjects if t["date"]and  t["date"].month<=month and t["date"].year<=year]
 
             elif f == "acquisition":
                 filters[f] = "1"
@@ -222,8 +222,6 @@ def merge_subjects(subjects):
 
     for s in subjects:
         if s["subject"] in subject2subject:
-            if s["subject"] == "java":
-                print s
             subject2subject[s["subject"]]["count"]+=s["count"]
         else:
             subject2subject[s["subject"]] = s
