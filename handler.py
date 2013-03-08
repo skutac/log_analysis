@@ -146,7 +146,8 @@ def store_subjects_from_GAExport(export):
         return "Chyba: Export obsahuje termíny z více než jednoho měsíce."
 
     for term in terms:
-        save_subject(term[0], term[1], date)
+        if int(term[1]) > 0:
+            save_subject(term[0], term[1], date)
 
     total_count = Subjects.objects.count()
     new_count = total_count - old_count
