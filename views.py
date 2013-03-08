@@ -51,6 +51,8 @@ def data_edit(request):
         subjects[i]["subject"] = subjects[i]["subject"].decode("utf8")
         subjects[i]["note"] = subjects[i]["note"].decode("utf8")
 
+    subjects.sort(key=lambda x: (x["subject"], x["date"]), reverse=True)
+
     page_interval = 150
     subjects, filters = filter_data(subjects, dict(request.GET), page_interval)
     subjects = merge_subjects(subjects)
