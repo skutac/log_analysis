@@ -269,6 +269,13 @@ padding:5px 10px 6px 7px;
 	text-decoration: none;
 }
 
+
+
+#previous_page, #next_page, #first_page, #last_page{
+	font-weight: bold;
+	font-size: 26px;
+}
+
 .active:hover{
 	cursor: pointer;
 	color: grey;

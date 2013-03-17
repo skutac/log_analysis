@@ -51,6 +51,17 @@ $(document).ready(function() {
         $("#filter_form").submit();
     });
 
+    $("#first_page.active").click(function(){
+        $("#page_number").val("0");
+        $("#filter_form").submit();
+    });
+
+    $("#last_page.active").click(function(){
+        var number = parseInt($(this).attr("data-last"));
+        $("#page_number").val(number);
+        $("#filter_form").submit();
+    });
+
     $("#set_filters").click(function(){
         $("#page_number").val(0);
         $("#filter_form").submit();

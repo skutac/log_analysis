@@ -133,7 +133,7 @@ def filter_data(subjects, filters, interval):
     return subjects, filters
 
 def get_pagination(count, interval, page):
-    page_count = count/interval
+    page_count = count/interval+1
     next = "active"
     previous = "active"
 
@@ -146,7 +146,7 @@ def get_pagination(count, interval, page):
         if count <= interval*(page+1):
             next = "inactive"
 
-    return next, previous, page_count+1
+    return next, previous, page_count
 
 def get_graph_data(subjects, filters):
     graph_data = {}
