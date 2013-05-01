@@ -137,9 +137,21 @@ def store_subjects_from_GAExport(export):
 
     export.close()
 
-    dates = list(set([".".join(d.split(".")[1:]) for d in dates]))
+    date_delimiter = "."
+    day_index = 0
+    month_index = 1
+    year_index = 2
+
+    if "/" in dates[0]:
+        date_delimiter = "/"
+        day_index = 1
+        month_index = 0
+        year_index = 2
+    
+    dates = list(set([date_delimiter.join([d.split(date_delimiter)[month_index], d.split(date_delimiter)[year_index]]) for d in dates]))
+
     if len(dates) == 1:
-        date_split = dates[0].split(".")
+        date_split = dates[0].split(date_delimiter)
         year = "".join(["20", date_split[1]])
         date = "-".join([year, date_split[0], "01"])
     else:
