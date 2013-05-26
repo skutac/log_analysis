@@ -29,3 +29,9 @@ class FilterForm(forms.Form):
     filter_category = forms.MultipleChoiceField(required=False, widget=forms.SelectMultiple, choices=categories[1:])
     graph = forms.MultipleChoiceField(required=False, widget=forms.Select(), choices=[(0, "-"), (1, "kategorie"), (2, "podkategorie"), (3, "akvizice")])
     hide_processed = forms.BooleanField()
+
+class LoginForm(forms.Form):
+    """Model of form for user login"""
+    username = forms.CharField(required=True)
+    password = forms.CharField(widget=forms.PasswordInput(), required=True)
+    

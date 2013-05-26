@@ -8,7 +8,7 @@ from django import forms
 from django.conf import settings
 
 from log_analysis.log.models import Category, SubjectCategory
-from log_analysis.forms import EditForm, FilterForm
+from log_analysis.forms import EditForm, FilterForm, LoginForm
 from log_analysis.handler import query_to_dicts
 
 
@@ -24,9 +24,6 @@ def index(request):
     """Returns main site for log and text file analysis"""
     form = UploadFileForm()
     return render_to_response("index.html", {"form":form})
-
-def get_acquisition_export(request):
-    pass
 
 def data_edit(request):
     """Returns view on current data ordered by count"""
@@ -231,3 +228,10 @@ def merge_subjects(subjects):
     subjects = [subject2subject[s] for s in subject2subject]
     subjects.sort(key = lambda x: x["count"], reverse=True)
     return subjects
+
+def user_registration(request):
+    pass
+
+def user_login(request):
+    login_form = LoginForm()
+    return render_to_response("login.html", {"login_form": login_form})

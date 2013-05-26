@@ -23,7 +23,6 @@ google.load("visualization", "1", {packages:["corechart"]});
           pieSliceText: "percentage",
           backgroundColor: "#FFFFFF",
           chartArea:{left:"auto",top:"auto",width:"80%",height:"80%"}
-          // chartArea:{left:"50",top:"50", right: "50", bottom:"50", width:"80%",height:"80%"}
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('graph'));
@@ -60,7 +59,7 @@ google.load("visualization", "1", {packages:["corechart"]});
 			<!-- <td><input type="text" value="{{ filters.note }}" name="note" id="note"></td> -->
 			<td class="hide_processed" data-original="{{filters.hide_processed}}">{{ filter_form.hide_processed }}</td>
 			<td class="graph" data-original="{{filters.graph}}">{{ filter_form.graph }}</td>
-			<td><input type="submit" value="Nastav" class="button" id="set_filters"></td>
+			<td><button type="submit" id="set_filters">Nastav</button></td>
 			<td><a href="./data_edit"><div class="button">Storno</div></a></td>
 			<input id="page_number" type="hidden" name="page" value={{ filters.page }} />
 		</form>
@@ -72,9 +71,8 @@ google.load("visualization", "1", {packages:["corechart"]});
 <div id="graph"></div>
 <form action="export_graph_as_png" method="post" id="graph_form">
 <input id="graph_input" type="hidden" name="graph" value="a" />
-<input type="submit" value="Export grafu" class="button" id="export_graph_button">
+<button type="submit" id="export_graph_button">Export grafu</button>
 </form>
-<!-- <div class="button" id="export_graph">Export grafu</div> -->
 <hr />
 {% endif %}
 
