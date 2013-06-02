@@ -14,14 +14,14 @@
 
 <h3>Vložte Google Analytics CSV export ('.csv')</h3>
 <form enctype="multipart/form-data" action="store_GAExport" method="post" id="upload_export_form">
-{{ form.file }}
+{{ form.file_field }}
 <hr/>
 <button type="submit">Nahrát soubor</button>
 </form>
-<div class="description">
+<!-- <div class="description">
 <ul>
 <li>Zde se nahrávají nové soubory s exporty uživatelských dotazů ze služby Google Analytics. Termíny již nejsou vyřazovány na základě jejich předchozího zpracování, ale dochází k aktualizaci vyhledávaného termínu.</li>
 </ul>
-</div>
+</div> -->
 
 {% endblock %}

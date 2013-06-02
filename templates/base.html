@@ -13,7 +13,10 @@
 </head>
 
 <body>
-<div id="head"><a href="http://www.techlib.cz" target=blank><img id="logo" src="static/img/ntk_logo.png"/></a><div id="main_title">Analýza logu vyhledávání v katalogu NTK</div></div>
+<div id="head"><a href="http://www.techlib.cz" target=blank><img id="logo" src="static/img/ntk_logo.png"/></a><div id="main_title"><a href="index">Analýza logu vyhledávání v katalogu NTK</a></div></div>
+{% if user.is_authenticated %}
+<div id="user"><span id="username">Uživatel: {{ user.username }}</span><span id="logout"><a href="user_logout">Odhlásit</a></span></div>
+{% endif %}
 <hr/>
 <div id="content">
 {% block content %}{% endblock %}

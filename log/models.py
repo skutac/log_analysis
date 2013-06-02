@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
     
 class Category(models.Model):
     categoryid = models.AutoField(primary_key=True)
@@ -20,4 +21,5 @@ class SubjectCount(models.Model):
     subject = models.ForeignKey('Subjects', db_column="subject")
     date = models.DateField()
     count = models.IntegerField(null=True)
+    user = models.ForeignKey(User, null=True, blank=True)
 

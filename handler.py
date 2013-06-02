@@ -8,9 +8,11 @@ from django.utils.encoding import smart_str, smart_unicode
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 
-from log_analysis.psh_db.models import Hesla, Ekvivalence, Varianta
 from log_analysis.log.models import Category, SubjectCategory, SubjectCount, Subjects
+
+import user_handler
 
 def query_to_dicts(query_string, *query_args):
     """Run a simple query and produce a generator
@@ -72,14 +74,16 @@ def store_updated_row(request):
     except Exception, e:
         print str(e)
 
+@login_required
 def store_GAExport(request):
-    """Accepts GA CSV export with unproccessed subjects""" 
+    """Store GA CSV export""" 
+    username = request.user
     if request.FILES:
-        return render_to_response("result.html", {"msg": store_subjects_from_GAExport(request.FILES["file"]), })
+        return render_to_response("result.html", {"msg": store_subjects_from_GAExport(request.FILES["file_field"], username=username), })
     else:
         return render_to_response("error.html", {'error': 'Nebyl vybrán žádný soubor.'})
 
-def save_subject(term, count, date):
+def save_subject(term, count, date, user):
     """Updates database with current subject:count pair. Creates it if not already there."""
     subject = {"subject":term, "date": date}
     if term in hesla or term in ekvivalence:
@@ -100,17 +104,18 @@ def save_subject(term, count, date):
 
         obj.save()
 
-    obj_count = SubjectCount(subject=obj, count=count, date=date)
+    obj_count = SubjectCount(subject=obj, count=count, date=date, user=user)
     obj_count.save()
     return
 
-def store_subjects_from_GAExport(export):
+def store_subjects_from_GAExport(export, username):
     """Stores subjects from GA CSV export."""
     old_count = Subjects.objects.count()
     switch = False
     dates = []
     terms = []
     old = "**********"
+    user = user_handler.get_user(username)
 
     for line in export.readlines():
         if switch:
@@ -159,7 +164,7 @@ def store_subjects_from_GAExport(export):
 
     for term in terms:
         if int(term[1]) > 0:
-            save_subject(term[0], term[1], date)
+            save_subject(term[0], term[1], date, user)
 
     total_count = Subjects.objects.count()
     new_count = total_count - old_count

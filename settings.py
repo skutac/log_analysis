@@ -30,6 +30,7 @@ DATABASES = {
     }
 }
 
+LOGIN_URL = "login"
 
 
 # Local time zone for this installation. Choices can be found here:
@@ -92,8 +93,10 @@ TEMPLATE_DIRS = (
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.messages',
     'django.contrib.sessions',
     'django.contrib.sites',
+    'django.contrib.admin',
     'log_analysis.log',
-    'log_analysis.psh_db',
+    # 'log_analysis.psh_db',
 )

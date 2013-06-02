@@ -6,28 +6,34 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django import forms
 from django.conf import settings
+from django.template import RequestContext
+from django.contrib.auth.decorators import login_required
 
 from log_analysis.log.models import Category, SubjectCategory
 from log_analysis.forms import EditForm, FilterForm, LoginForm
 from log_analysis.handler import query_to_dicts
 
+import user_handler
+
 
 class UploadFileForm(forms.Form):
     """Model of form for file upload"""
-    file = forms.FileField()
+    file_field = forms.FileField()
 
 def redirect(request):
     """Redirects to index site"""
     return HttpResponseRedirect("log_analysis/index")
 
+@login_required
 def index(request):
     """Returns main site for log and text file analysis"""
     form = UploadFileForm()
-    return render_to_response("index.html", {"form":form})
+    return render_to_response("index.html", {"form":form}, context_instance=RequestContext(request))
 
+@login_required
 def data_edit(request):
     """Returns view on current data ordered by count"""
-    #terms = Current.objects.filter(count__gt = 6).order_by("-count")
+    user = user_handler.get_user(request.user)
     edit_form = EditForm()
     filter_form = FilterForm()
     subjects = query_to_dicts("""SELECT log_subjects.subject,
@@ -41,7 +47,8 @@ def data_edit(request):
                             FROM log_subjects
                             LEFT JOIN log_category on log_category.categoryid = log_subjects.category_id
                             LEFT JOIN log_subjectcategory on log_subjectcategory.subjectcategoryid = log_subjects.subjectcategory_id
-                            RIGHT JOIN log_subjectcount on log_subjectcount.subject = log_subjects.subject""")
+                            RIGHT JOIN log_subjectcount on log_subjectcount.subject = log_subjects.subject
+                            WHERE log_subjectcount.user_id = '%s'"""%(user.id))
     subjects = list(subjects)
 
     for i in xrange(len(subjects)):
@@ -64,7 +71,7 @@ def data_edit(request):
     else:
         subjects = subjects[page_interval*filters["page"]:page_interval*filters["page"]+page_interval]
 
-    return render_to_response("data_edit.html", {'subjects': subjects, "edit_form": edit_form, "filter_form": filter_form, "filters":filters, "next": next, "previous":previous, "page_count":page_count, "graph_data": graph_data})
+    return render_to_response("data_edit.html", {'subjects': subjects, "edit_form": edit_form, "filter_form": filter_form, "filters":filters, "next": next, "previous":previous, "page_count":page_count, "graph_data": graph_data}, context_instance=RequestContext(request))
 
 def filter_data(subjects, filters, interval):
     no_subject_category = True
@@ -229,9 +236,9 @@ def merge_subjects(subjects):
     subjects.sort(key = lambda x: x["count"], reverse=True)
     return subjects
 
-def user_registration(request):
+def registration(request):
     pass
 
-def user_login(request):
+def login(request):
     login_form = LoginForm()
     return render_to_response("login.html", {"login_form": login_form})

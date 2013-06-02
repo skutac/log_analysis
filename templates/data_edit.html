@@ -30,7 +30,7 @@ google.load("visualization", "1", {packages:["corechart"]});
       }
 </script>
 {% endif %}
-<div class="home_link"><a href='index'>Zpět na hlavní stránku</a></div>
+<!-- <div class="home_link"><a href='index'>Zpět na hlavní stránku</a></div> -->
 
 <table id="data_filter">
 	<thead>
@@ -114,13 +114,13 @@ google.load("visualization", "1", {packages:["corechart"]});
 </tr>
 {% endfor %}
 </table>
-<div class="pagination"><span class="{{ previous }}" id="previous_page">&lt;  </span> {{ filters.page|add:"1" }} z {{page_count}}<span class="{{ next }}" id="next_page">  &gt;</span></div>
+<div class="pagination"><span id="first_page" class="{{ previous }}">&laquo; </span><span class="{{ previous }}" id="previous_page">&lsaquo;  </span> {{ filters.page|add:"1" }} z {{page_count}}<span class="{{ next }}" id="next_page">  &rsaquo;</span> <span id="last_page" class="{{ next }}" data-last="{{page_count|add:"-1"}}"> &raquo;</span></div>
 
 {% if filters.acquisition %}
 <div id="acquisition_export_button" class="button">Export akvizice</div>
 <div id="acquisition_export">
 {% for subject in subjects %}
-<div><a href="{{ subject.note }}">{{ subject.subject }}</a>, {{ subject.count }}, {{ subject.note }}</div>
+<div>{{ subject.subject }}, {{ subject.count }}, {{ subject.note }}</div>
 {% endfor %}
 </div>
 

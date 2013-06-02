@@ -15,6 +15,8 @@ $(document).ready(function() {
 
     set_original_filter_values();
 
+    $("#filter_category .ui-multiselect, #filter_subject_category .ui-multiselect").css('width', 'auto');
+
     $("table").on("click", "#id_category", function(){
         var option = $(this).val();
         update_category($(this), option);
