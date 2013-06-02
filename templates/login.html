@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+	<form action="user_login" method="post" id="login_form">{% csrf_token %}
+		<div><label for="">Uživatel</label>
+				{{ login_form.username }}</div>
+		<div><label for="">Heslo</label>
+				{{ login_form.password }}</div>
+	<button name="login" id="login_button">Přihlásit</button>
+		<!-- <span>Nemáte účet? Zažádejte o registraci.</span> -->
+	</form>
+</div>
+{% endblock %}
