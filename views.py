@@ -82,9 +82,6 @@ def filter_data(subjects, filters, interval):
                 filters[f] = filters[f][0]
                 subjects = [t for t in subjects if filters[f] in t["subject"]]
 
-            # if f == "note":
-            #     subjects = [t for t in subjects if filters[f] in t["note"]]
-
             if f == "filter_category" and filters[f][0] != "0":
                 filters[f] = [int(num) for num in filters[f]]
                 category_ids = [int(num) for num in filters[f]]

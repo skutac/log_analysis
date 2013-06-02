@@ -30,7 +30,6 @@ google.load("visualization", "1", {packages:["corechart"]});
       }
 </script>
 {% endif %}
-<!-- <div class="home_link"><a href='index'>Zpět na hlavní stránku</a></div> -->
 
 <table id="data_filter">
 	<thead>
@@ -41,7 +40,6 @@ google.load("visualization", "1", {packages:["corechart"]});
 			<th></th>
 			<th></th>
 			<th>Akvizice:</th>
-			<!-- <th>Poznámka obsahuje:</th> -->
 			<th>Schovat zpracované:</th>
 			<th>Graf:</th>
 			<th></th>
@@ -56,7 +54,6 @@ google.load("visualization", "1", {packages:["corechart"]});
 			<td id="filter_category" data-original="{{filters.filter_category}}">{{ filter_form.filter_category }}</td>
 			<td id="filter_subject_category" data-original="{{filters.filter_subject_category}}">{{ filter_form.filter_subject_category }}</td>
 			<td class="acquisition" data-original="{{filters.acquisition}}">{{ edit_form.acquisition }}</td>
-			<!-- <td><input type="text" value="{{ filters.note }}" name="note" id="note"></td> -->
 			<td class="hide_processed" data-original="{{filters.hide_processed}}">{{ filter_form.hide_processed }}</td>
 			<td class="graph" data-original="{{filters.graph}}">{{ filter_form.graph }}</td>
 			<td><button type="submit" id="set_filters">Nastav</button></td>
