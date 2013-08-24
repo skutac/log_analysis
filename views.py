@@ -47,7 +47,7 @@ def data_edit(request):
                             FROM log_subjects
                             LEFT JOIN log_category on log_category.categoryid = log_subjects.category_id
                             LEFT JOIN log_subjectcategory on log_subjectcategory.subjectcategoryid = log_subjects.subjectcategory_id
-                            RIGHT JOIN log_subjectcount on log_subjectcount.subject = log_subjects.subject
+                            RIGHT JOIN log_subjectcount on log_subjectcount.subject_id = log_subjects.subjectid
                             WHERE log_subjectcount.user_id = '%s'"""%(user.id))
     subjects = list(subjects)
 

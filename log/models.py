@@ -10,7 +10,8 @@ class SubjectCategory(models.Model):
     subjectcategory = models.CharField(max_length=255)
 
 class Subjects(models.Model):
-    subject = models.CharField(max_length=255, primary_key=True)
+    subjectid = models.AutoField(primary_key=True)
+    subject = models.CharField(max_length=255)
     category = models.ForeignKey("Category", null=True, blank=True)
     subjectcategory = models.ForeignKey("SubjectCategory", null=True, blank=True)
     acquisition = models.BooleanField(default=False)
@@ -18,8 +19,8 @@ class Subjects(models.Model):
     note = models.TextField()
 
 class SubjectCount(models.Model):
-    subject = models.ForeignKey('Subjects', db_column="subject")
+    subjectcountid = models.AutoField(primary_key=True)
+    subject = models.ForeignKey('Subjects')
     date = models.DateField()
     count = models.IntegerField(null=True)
     user = models.ForeignKey(User, null=True, blank=True)
-
