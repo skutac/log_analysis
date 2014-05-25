@@ -26,7 +26,7 @@ def login_user(request):
             login(request, user)
             return HttpResponseRedirect("index")
     else:
-        return HttpResponseRedirect("log_analysis/index")
+        return HttpResponseRedirect("index")
 
 def logout_user(request):
     logout(request)

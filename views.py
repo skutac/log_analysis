@@ -52,8 +52,8 @@ def data_edit(request):
     subjects = list(subjects)
 
     for i in xrange(len(subjects)):
-        subjects[i]["subject"] = subjects[i]["subject"].decode("utf8")
-        subjects[i]["note"] = subjects[i]["note"].decode("utf8")
+        subjects[i]["subject"] = subjects[i]["subject"]
+        subjects[i]["note"] = subjects[i]["note"]
 
     subjects.sort(key=lambda x: (x["subject"], x["date"]), reverse=True)
 
@@ -80,7 +80,7 @@ def filter_data(subjects, filters, interval):
         if filters[f]:
             if f == "term_search":
                 filters[f] = filters[f][0]
-                subjects = [t for t in subjects if filters[f] in t["subject"]]
+                subjects = [t for t in subjects if filters[f] in t["subject"].decode("utf8")]
 
             if f == "filter_category" and filters[f][0] != "0":
                 filters[f] = [int(num) for num in filters[f]]
@@ -110,7 +110,7 @@ def filter_data(subjects, filters, interval):
                 filters[f] = filters[f][0]
                 if filters[f]:
                     month, year = int(filters[f].split("/")[0]), int(filters[f].split("/")[1])
-                    subjects = [t for t in subjects if t["date"]and  t["date"].month<=month and t["date"].year<=year]
+                    subjects = [t for t in subjects if t["date"] and t["date"].year<year or (t["date"].year == year and t["date"].month<=month)]
 
             elif f == "acquisition":
                 filters[f] = "1"

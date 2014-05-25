@@ -146,7 +146,7 @@ def store_subjects_from_GAExport(export, username):
     day_index = 0
     month_index = 1
     year_index = 2
-
+    print dates
     if "/" in dates[0]:
         date_delimiter = "/"
         day_index = 1
